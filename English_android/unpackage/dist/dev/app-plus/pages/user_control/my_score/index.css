@@ -1,0 +1,30 @@
+
+body{
+		background-color: #F5F5F5;
+}
+.box{
+		background-color: #fff;
+		border-bottom: 2px #eaeaea solid;
+		padding-top: 1.09375rem;
+		padding-left: 1.5625rem;
+		padding-bottom: 0.78125rem;
+		display: flex;
+		flex-direction: row;
+}
+.box_left{
+		display: flex;
+		flex-direction: column;
+}
+.score{
+		color: Crimson;
+		margin-left: 2.5rem;
+		margin-top: 2.1875rem;
+		font-size: 1.09375rem;
+}
+.essay_title{
+		font-size: 1.1875rem;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		width: 15.625rem;
+}

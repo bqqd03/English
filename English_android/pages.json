@@ -1,0 +1,154 @@
+{
+	"pages": [
+		{
+			"path": "pages/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},{
+			"path": "pages/register",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
+		},{
+			"path": "pages/home",
+			"style": {
+				"navigationBarTitleText": "首页"
+		  }
+		},{
+			"path": "pages/essay_control/index",
+			"style": {
+				"navigationBarTitleText": "文章管理"
+			}
+		},{
+			"path": "pages/class_control/index",
+			"style": {
+				"navigationBarTitleText": "班级管理"
+			}
+		},{
+			"path": "pages/class_control/class_details",
+			"style": {
+				"navigationBarTitleText": "班级信息"
+			}
+		},{
+			"path": "pages/class_control/class_homework",
+			"style": {
+				"navigationBarTitleText": "班级作业"
+			}
+		},{
+			"path": "pages/exercise/index",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"autoBackButton": false
+					}
+				}
+			}
+		},{
+			"path": "pages/exercise/save_audio",
+			"style": {
+				"navigationBarTitleText": "音频缓存"
+			}
+		},{
+			"path": "pages/user_control/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},{
+			"path": "pages/exercise/ninegrid",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"autoBackButton": false
+					}
+				}
+			}
+		},{
+			"path": "pages/exercise/blank",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"autoBackButton": false
+					}
+				}
+			}
+		},{
+			"path": "pages/user_control/user_info",
+			"style": {
+				"navigationBarTitleText": "个人信息"
+			}
+		},{
+			"path": "pages/user_control/change_password",
+			"style": {
+				"navigationBarTitleText": "修改密码"
+			}
+		},{
+			"path": "pages/essay_control/select_word",
+			"style": {
+				"navigationBarTitleText": "句子选词"
+			}
+		},{
+			"path": "pages/essay_control/sentence_audio",
+			"style": {
+				"navigationBarTitleText": "句子音频"
+			}
+		},{
+			"path": "pages/user_control/my_score/index",
+			"style": {
+				"navigationBarTitleText": "我的成绩"
+			}
+		},{
+			"path": "pages/user_control/my_score/detail",
+			"style": {
+				"navigationBarTitleText": "答题详情"
+			}
+		},{
+			"path": "pages/user_control/change_info",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"autoBackButton": false
+					}
+				}
+			}
+		}
+	],
+	"tabBar": {
+	  "color": "#000",
+	  "selectedColor": "#DC143C",
+	  "fontSize": "15px",
+	  "backgroundColor": "#fff",
+	  "list":[
+			{
+				"text":"首页",
+				"pagePath":"pages/home",
+				"iconPath": "static/icons/home.png",
+				"selectedIconPath": "static/icons/home-selected.png"
+			},{
+				"text":"英语练习",
+				"pagePath":"pages/exercise/index",
+				"iconPath": "static/icons/text.png",
+				"selectedIconPath": "static/icons/text-selected.png"
+			},{
+				"text":"文章管理",
+				"pagePath":"pages/essay_control/index",
+				"iconPath": "static/icons/control.png",
+				"selectedIconPath": "static/icons/control-selected.png"
+			},{
+				"text":"班级管理",
+				"pagePath":"pages/class_control/index",
+				"iconPath": "static/icons/control.png",
+				"selectedIconPath": "static/icons/control-selected.png"
+			},{
+				"text":"我的",
+				"pagePath":"pages/user_control/index",
+				"iconPath": "static/icons/user.png",
+				"selectedIconPath": "static/icons/user-selected.png"
+			}
+		]
+	}
+}
