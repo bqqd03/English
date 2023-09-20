@@ -35,6 +35,16 @@
 
     <el-col :span="7" >
       <el-card>
+
+        <span class="add-title">提交情况</span>
+        <el-form class="addForm">
+          <el-form-item label="已交人数">
+              <el-space style="color: ForestGreen;font-size: 18px">{{submit_num + '人' }}</el-space>
+          </el-form-item>
+          <el-form-item label="未交人数">
+              <el-space style="color: crimson;font-size: 18px">{{noSubmit_num + '人' }}</el-space>
+          </el-form-item>
+        </el-form>
       </el-card>
     </el-col>
   </el-row>
@@ -51,6 +61,8 @@ const route = useRoute()
 const router = useRouter()
 let result = ref()
 let class_id = ref()
+let submit_num = ref()
+let noSubmit_num = ref()
 let user_id= JSON.parse(localStorage.getItem('token')).user_id
 
 onMounted(()=>{
@@ -58,6 +70,10 @@ onMounted(()=>{
     timeChange(res.data.data)
     result.value = res.data.data
     class_id.value=res.data.class_id
+    submit_num.value= res.data.data.length
+    https.post('/teacher/class_info',{'class_id':class_id.value}).then(res=>{
+      noSubmit_num.value=res.data.stu_num-submit_num.value
+    })
   }).catch(()=>{
     ElMessage.error('未连接到服务器')
   })
@@ -107,5 +123,20 @@ function back() {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.add-title{
+  display: block;
+  font-size: 22px;
+  font-weight: bold;
+  padding-left: 10px;
+  padding-top: 15px;
+}
+.addForm{
+  margin-top: 20px;
+  margin-left: 10px;
+}
+.el-form-item{
+  font-weight: bold;
+  font-size: 5px;
 }
 </style>
