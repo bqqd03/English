@@ -52,7 +52,7 @@ onLoad(e=>{
 })
 function getExercise(){
 	uni.navigateTo({
-		url: '/pages/class_control/class_homework?class_id='+ class_id.value
+		url: '/pages/class_control/class_homework?class_id='+ class_id.value +'&teacher_name=' + teacher_name.value
 	})
 }
 

@@ -794,6 +794,25 @@ def get_catalog():
         data.append(catalog_info['label'])
     return jsonify(data)
 
+@teacher.route('/class_homework_android', methods=['POST'])
+def class_homework_android():
+    class_id = request.json.get('class_id')
+    homework_data = Homework.query.filter_by(class_id=class_id).all()
+    data = []
+    for i in homework_data:
+        item = i.to_json()
+        class_data = ClassInfo.query.filter_by(class_id=item['class_id']).first()
+        essay_data = Essay.query.filter_by(essay_id=item['essay_id']).first()
+        stu_num = TypeUser.query.filter_by(type_id=class_data.to_json()['class_code']).count()
+        submit_num = HomeworkResult.query.filter_by(homework_id=item['homework_id']).count()
+        item['class_name'] = class_data.to_json()['class_name']
+        item['essay_name'] = essay_data.to_json()['title']
+        item['submit_num'] = submit_num
+        item['noSubmit_num'] = stu_num - submit_num
+        data.append(item)
+
+    return jsonify(data)
+
 
 def split_sentences(text):
     sentences = nltk.sent_tokenize(text)
