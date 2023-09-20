@@ -22,13 +22,14 @@
 
 <script setup>
 import { onShow } from "@dcloudio/uni-app"
+import common from "@/common/js/common.js"
 
 let token = JSON.parse(uni.getStorageSync('token'))
 let avatar = ''
 
 onShow(()=>{
 	token = JSON.parse(uni.getStorageSync('token'))
-	avatar = 'http://10.10.4.222:8080' + token.avatar
+	avatar = common.fronturl + token.avatar
 })
 
 function userInform(){

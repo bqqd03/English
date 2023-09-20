@@ -31,6 +31,7 @@
 import { onLoad } from "@dcloudio/uni-app"
 import https from '../../axios.js'
 import { reactive, ref } from "vue"
+import common from"@/common/js/common.js"
 
 let word_list = ref()
 let timer = null //定时器
@@ -93,7 +94,7 @@ onLoad(e=>{
 	).then(res=>{
 		essay.essay_data=res.data.data
 		essay.essay_length=res.data.data.length
-		audioContext.src= 'http://10.10.4.222:8080'+ res.data.audio_address
+		audioContext.src= common.fronturl+ res.data.audio_address
 		result_essay.exercise_num = res.data.exercise_num
 		result_sentence.exercise_num = res.data.exercise_num
 		essay.current_sentence = res.data.start_id

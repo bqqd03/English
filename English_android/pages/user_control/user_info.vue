@@ -24,6 +24,7 @@
 import { onShow } from "@dcloudio/uni-app"
 import { ref } from 'vue'
 import https from '@/axios.js'
+import common from "@/common/js/common.js"
 
 let token = ''
 let password = uni.getStorageSync('password')
@@ -32,7 +33,7 @@ let role = ''
 
 onShow(()=>{
 	token = JSON.parse(uni.getStorageSync('token'))
-	avatar = 'http://10.10.4.222:8080'+ token.avatar
+	avatar = common.fronturl + token.avatar
 	if (token.role == 'teacher'){
 		role = '教师'
 	} else if (token.role=='admin'){
@@ -61,7 +62,7 @@ function avatar_change(){
 
 function uploadPhoto(tempFilePaths) {
 	uni.uploadFile({
-		url: 'http://192.168.216.105:8081/auth/set_avatar', 
+		url: common.backurl +'/auth/set_avatar', 
 		headers: {
 		    'Access-Control-Allow-Origin': '*',
 		},
