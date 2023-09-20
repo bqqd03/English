@@ -15,7 +15,6 @@ def homework_list():
     user_id = request.json.get('user_id')
     dataList = []
     homework_data = Homework.query.filter_by(class_id=class_id).all()
-    print(class_id)
     for j in homework_data:
         item = j.to_json()
         class_name = ClassInfo.query.filter_by(class_id=item['class_id']).first()
