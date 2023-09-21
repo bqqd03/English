@@ -617,7 +617,7 @@ def class_info():
     class_id = request.json.get('class_id')
     class_list_data = ClassInfo.query.filter_by(class_id=class_id).first()
     data = class_list_data.to_json()
-    stu_num = TypeUser.query.filter_by(type_id=class_id).count()
+    stu_num = TypeUser.query.filter_by(type_id=data['class_code']).count()
     data['stu_num'] = stu_num
     return jsonify(data)
 
