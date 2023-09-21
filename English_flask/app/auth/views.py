@@ -138,7 +138,7 @@ def get_teacher_info():
 def get_type():
     user_id = request.json.get('user_id')
     role = request.json.get('role')
-    type_data = TypeUser.query.filter_by(user_id=user_id).all()
+    type_data = TypeUser.query.filter_by(user_id=user_id,confirm='1').all()
     data = []
     for i in type_data:
         if role=='student':
@@ -147,5 +147,5 @@ def get_type():
         else:
             class_type = EssayCatalog.query.filter_by(id=i.to_json()['type_id']).first()
             data.append(class_type.to_json()['label'])
-    data = ','.join(data)
+    data = ', '.join(data)
     return jsonify(data)

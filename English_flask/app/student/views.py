@@ -6,7 +6,8 @@ from flask import request, jsonify
 
 from . import student
 from .. import db
-from ..models import ClassInfo, Homework, Essay, HomeworkResult, HomeworkSentence, Paragraph, ParagraphDegree, TypeUser
+from ..models import ClassInfo, Homework, Essay, HomeworkResult, HomeworkSentence, Paragraph, ParagraphDegree, TypeUser, \
+    User
 
 
 @student.route('/homework_list', methods=['POST'])
@@ -239,11 +240,24 @@ def apply_class():
 @student.route('/get_class', methods=['POST'])
 def get_class():
     user_id = request.json.get('user_id')
-    data=[]
-    student_class = TypeUser.query.filter_by(user_id=user_id).all()
+    data = []
+    student_class = TypeUser.query.filter_by(user_id=user_id, confirm='1').all()
     for i in student_class:
         class_info = ClassInfo.query.filter_by(class_code=i.to_json()['type_id']).first()
         data.append(class_info.to_json())
+
+    return jsonify(data)
+
+
+@student.route('/class_detail', methods=['POST'])
+def class_detail():
+    class_id = request.json.get('class_id')
+    class_data = ClassInfo.query.filter_by(class_id=class_id).first()
+    class_info = class_data.to_json()
+    teacher_data = User.query.filter_by(username=class_info['teacher_name']).first()
+    teacher_info = teacher_data.to_json()
+    data = {'teacher_name': teacher_info['username'], 'teacher_avatar': teacher_info['avatar'],
+            'class_name': class_info['class_name']}
 
     return jsonify(data)
 
