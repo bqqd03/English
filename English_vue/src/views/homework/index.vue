@@ -56,6 +56,7 @@
 
     <el-col :span="7" >
       <el-card>
+        <class-detail :class_id="route.query.class_id" />
       </el-card>
     </el-col>
   </el-row>
@@ -67,6 +68,7 @@ import https from "@/apis/axio";
 import {ElMessage} from "element-plus";
 import {useRouter,useRoute} from "vue-router";
 import {Back} from "@element-plus/icons-vue";
+import ClassDetail from "./components/classDetail.vue";
 
 let homeworkInfo=ref([])
 const scrollHeight = (document.documentElement.clientHeight - 200).toString() + "px"
