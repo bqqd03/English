@@ -31,6 +31,11 @@
 				"navigationBarTitleText": "班级信息"
 			}
 		},{
+			"path": "pages/class_control/addHomework",
+			"style": {
+				"navigationBarTitleText": "添加作业"
+			}
+		},{
 			"path": "pages/class_control/class_homework",
 			"style": {
 				"navigationBarTitleText": "班级作业"
