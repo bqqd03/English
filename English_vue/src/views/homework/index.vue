@@ -8,7 +8,7 @@
         </template>
         <el-scrollbar :style="{ height: scrollHeight }">
           <div v-for="item in homeworkInfo" class="classCard">
-            <el-card  style="margin-bottom:20px;height: 330px;width: 450px">
+            <el-card  style="margin-bottom:20px;width: 450px">
               <div class="class_head">
                 <el-space>作业信息</el-space>
                 <el-space v-if="item.status!=='已完成'">{{ item.status }}</el-space>
