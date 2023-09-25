@@ -1,8 +1,8 @@
 <template>
-	<uni-nav-bar :fixed="true"  status-bar left-icon="left" title="九宫格练习" @clickLeft="home()" background-color="#F5F5F5" :border="false" />
+	<uni-nav-bar :fixed="true"  status-bar left-icon="left" title="选择练习" @clickLeft="home()" background-color="#F5F5F5" :border="false" />
 	
 	<progress :percent="essay.percentage" style="padding: 12px 10px 8px;" />
-	<text style="padding: 8px 10px;">九宫格&nbsp&nbsp{{ essay.current_sentence + 1 }}/{{ essay.essay_length }}</text>
+	<text style="padding: 8px 10px;">选择&nbsp&nbsp{{ essay.current_sentence + 1 }}/{{ essay.essay_length }}</text>
 	
 	<view class="sentence_box" >
 		<view v-for="item in word_list" class="sentence">

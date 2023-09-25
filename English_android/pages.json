@@ -26,6 +26,11 @@
 				"navigationBarTitleText": "班级管理"
 			}
 		},{
+			"path": "pages/class_control/student_homework",
+			"style": {
+				"navigationBarTitleText": "我的作业"
+			}
+		},{
 			"path": "pages/class_control/class_details",
 			"style": {
 				"navigationBarTitleText": "班级信息"
@@ -72,6 +77,26 @@
 			}
 		},{
 			"path": "pages/exercise/blank",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"autoBackButton": false
+					}
+				}
+			}
+		},{
+			"path": "pages/class_control/ninegrid",
+			"style": {
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": {
+						"autoBackButton": false
+					}
+				}
+			}
+		},{
+			"path": "pages/class_control/blank",
 			"style": {
 				"navigationStyle": "custom",
 				"app-plus": {

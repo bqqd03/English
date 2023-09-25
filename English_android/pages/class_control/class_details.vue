@@ -9,7 +9,8 @@
 			<text style="background-color: #fff;color: cornflowerblue;width: 100rpx;">{{  '共 ' + stu_num + ' 人'  }}</text>
 			<text> {{ class_code }} </text>
 		</view>
-		<button style="width: 22%;position: absolute;top: 8%;right: 5%;" type="primary" size="mini" @click="getExercise()">作业管理</button>
+		<button style="width: 22%;position: absolute;top: 8%;right: 5%;" type="primary" size="mini" @click="getExercise()" v-if="role === 'teacher'">作业管理</button>
+		<button style="width: 22%;position: absolute;top: 8%;right: 5%;" type="primary" size="mini" @click="getHomework()" v-if="role === 'student'">我的作业</button>
 	</view>
 	<view v-for="item in classStu" style="margin-top: 3%;margin-left: 3%;display: flex;flex-direction: row;border-bottom: 1px solid black;padding-bottom: 3%;">
 		<image :src="common.fronturl +item.avatar" style="width: 40px;height: 40px;border-radius: 40rpx;"/>
@@ -33,6 +34,7 @@ let class_code = ref()
 let stu_num = ref()
 let avatar = ref()
 let classStu = ref()
+let role = JSON.parse(uni.getStorageSync('token')).role
 onLoad(e=>{
 	https.post('/teacher/class_info',{'class_id': e.class_id}).then(res=>{
 		class_id.value = res.data.class_id
@@ -53,6 +55,11 @@ onLoad(e=>{
 function getExercise(){
 	uni.navigateTo({
 		url: '/pages/class_control/class_homework?class_id='+ class_id.value +'&teacher_name=' + teacher_name.value
+	})
+}
+function getHomework(){
+	uni.navigateTo({
+		url: '/pages/class_control/student_homework?class_id='+ class_id.value +'&user_id=' + JSON.parse(uni.getStorageSync('token')).user_id
 	})
 }
 

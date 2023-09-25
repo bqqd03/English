@@ -6,6 +6,14 @@
 		},
 		onShow: function() {
 			console.log('App Show')
+			if (JSON.parse(uni.getStorageSync('token')).role == 'teacher'){
+	
+			} else if (JSON.parse(uni.getStorageSync('token')).role=='student'){
+				uni.setTabBarItem({
+				  index: 2,
+				  visible:false
+				})
+			}
 		},
 		onHide: function() {
 			console.log('App Hide')

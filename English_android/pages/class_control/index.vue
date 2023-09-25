@@ -23,7 +23,12 @@ function getClass() {
 	if (token.role == 'teacher'){
 		https.post('/teacher/class_list',{'username': token.username}).then(res=>{
 		  classInfo.value=res.data
-		  console.log(classInfo.value);
+		}).catch(()=>{
+		  ElMessage.error('未连接到服务器')
+		})
+	} else if (token.role == 'student'){
+		https.post('/student/get_class',{'user_id': token.user_id}).then(res=>{
+		  classInfo.value=res.data
 		}).catch(()=>{
 		  ElMessage.error('未连接到服务器')
 		})

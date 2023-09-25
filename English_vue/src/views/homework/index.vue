@@ -85,7 +85,7 @@ onMounted(()=>{
 })
 function begin(item) {
   console.log(item)
-  if (item.homework_type==='九宫格'){
+  if (item.homework_type==='选择'){
     router.push({
       name: 'homework_ninGrid',
       query:{

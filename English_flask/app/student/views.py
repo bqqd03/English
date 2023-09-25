@@ -34,7 +34,6 @@ def homework_list():
         else:
             item['status'] = '已结束'
         dataList.append(item)
-    print(dataList)
     for j in dataList:
         result_data = HomeworkResult.query.filter_by(homework_id=j['homework_id'], stu_id=user_id).first()
         if result_data is not None:

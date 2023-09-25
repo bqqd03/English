@@ -100,7 +100,7 @@ const gradeList=[
 ]
 const typeList=[
   {'label':'填空', 'value':'填空'},
-  {'label':'九宫格', 'value':'九宫格'},
+  {'label':'选择', 'value':'选择'},
 ]
 
 onMounted(()=>{

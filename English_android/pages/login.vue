@@ -30,14 +30,36 @@ onShow(()=>{
 	if (token != ''){
 		uni.switchTab({
 			url: '/pages/home',
-			success:function(){
-				if (JSON.parse(token).role == 'student'){
-					uni.setTabBarItem({
-					  index: 2,
-					  visible:false
-					})
-				}
-			}
+			// success:function(){
+			// 	if (JSON.parse(uni.getStorageSync('token')).role == 'teacher'){
+			// 		uni.setTabBarItem({
+			// 		  index: 4,
+			// 		  visible:false
+			// 		})
+			// 	} else if (JSON.parse(uni.getStorageSync('token')).role=='admin'){
+			// 		uni.setTabBarItem({
+			// 		  index: 2,
+			// 		  visible:false
+			// 		})
+			// 		uni.setTabBarItem({
+			// 		  index: 3,
+			// 		  visible:false
+			// 		})
+			// 		uni.setTabBarItem({
+			// 		  index: 4,
+			// 		  visible:false
+			// 		})
+			// 	} else {
+			// 		uni.setTabBarItem({
+			// 		  index: 2,
+			// 		  visible:false
+			// 		})
+			// 		uni.setTabBarItem({
+			// 		  index: 3,
+			// 		  visible:false
+			// 		})
+			// 	}
+			// }
 		})
 	}
 })
@@ -59,15 +81,7 @@ function submit(){
 			uni.setStorageSync('token',JSON.stringify(res.data.user))
 			uni.setStorageSync('password',loginData.password)
 			uni.switchTab({
-				url: '/pages/home',
-				success:function(){
-					if (res.data.user.role == 'student'){
-						uni.setTabBarItem({
-						  index: 2,
-						  visible:false
-						})
-					}
-				}
+				url: '/pages/home'
 			})
 		} else {
 			uni.showToast({

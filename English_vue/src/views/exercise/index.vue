@@ -61,7 +61,7 @@ const options =reactive({
 })
 const mode_options=[
   {value:'blank',label:'填空'},
-  {value:'nine',label:'九宫格'}
+  {value:'nine',label:'选择'}
 ]
 
 

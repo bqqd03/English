@@ -106,15 +106,16 @@ function startDegree(essay_id){
 			})
 			uni.showActionSheet({
 				title: '模式选择',
-				itemList: ['九宫格','填空'],
+				itemList: ['选择','填空'],
 				success: (item) => {
 					if (item.tapIndex == 0){
 						uni.showActionSheet({
 							title: '难度选择',
 							itemList: grade,
-							success: (item1) => {
+							success: (g) => {
+								console.log(g);
 								uni.navigateTo({
-									url: '/pages/exercise/ninegrid?grade='+grade[item1.tapIndex]+'&essay_id='+essay_id
+									url: '/pages/exercise/ninegrid?grade='+grade[g.tapIndex]+'&essay_id='+essay_id
 								})
 							}
 						})
@@ -122,9 +123,9 @@ function startDegree(essay_id){
 						uni.showActionSheet({
 							title: '难度选择',
 							itemList: grade,
-							success: (item1) => {
+							success: (g) => {
 								uni.navigateTo({
-									url: '/pages/exercise/blank?grade='+grade[item1.tapIndex]+'&essay_id='+essay_id
+									url: '/pages/exercise/blank?grade='+grade[g.tapIndex]+'&essay_id='+essay_id
 								})
 							}
 						})
@@ -221,4 +222,9 @@ function savaAudio(){
 	  margin-right: 10px;
 	  width: 22%;
 	}
+	/deep/ .uni-nav-bar-text {
+	  font-size: 32rpx !important;
+	  font-weight: bold;
+	}
+
 </style>
