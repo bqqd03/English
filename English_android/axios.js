@@ -1,11 +1,12 @@
 import axios from "axios";
 import axiosAdapterUniapp from 'axios-adapter-uniapp'
+import common from "@/common/js/common.js"
 
 // 创建axios的实例
 const https = axios.create({
     // `baseURL` 将自动加在 `url` 前面，除非 `url` 是一个绝对 URL
     // baseURL: 'http://10.10.4.222:5000',
-	baseURL: 'http://127.0.0.1:5000',
+	baseURL: common.backurl,
 	adapter: axiosAdapterUniapp,
     headers: {
         'Access-Control-Allow-Origin': '*',
