@@ -59,7 +59,7 @@ function getExercise(){
 }
 function getHomework(){
 	uni.navigateTo({
-		url: '/pages/class_control/student_homework?class_id='+ class_id.value +'&user_id=' + JSON.parse(uni.getStorageSync('token')).user_id
+		url: '/pages/homework/student_homework?class_id='+ class_id.value +'&user_id=' + JSON.parse(uni.getStorageSync('token')).user_id
 	})
 }
 

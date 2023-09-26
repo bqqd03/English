@@ -7,10 +7,17 @@
 		onShow: function() {
 			console.log('App Show')
 			if (JSON.parse(uni.getStorageSync('token')).role == 'teacher'){
-	
+				uni.setTabBarItem({
+				  index: 4,
+				  visible:false
+				})
 			} else if (JSON.parse(uni.getStorageSync('token')).role=='student'){
 				uni.setTabBarItem({
 				  index: 2,
+				  visible:false
+				})
+				uni.setTabBarItem({
+				  index: 3,
 				  visible:false
 				})
 			}

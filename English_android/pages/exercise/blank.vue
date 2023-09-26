@@ -324,4 +324,8 @@ function home(){
 		border-bottom:1px solid #000;
 		color: crimson;
 	}
+	/deep/ .uni-nav-bar-text {
+	  font-size: 32rpx !important;
+	  font-weight: bold;
+	}
 </style>

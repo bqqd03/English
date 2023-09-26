@@ -385,4 +385,8 @@ function home(){
 		font-size: 18px;
 		display: flex;
 	}
+	/deep/ .uni-nav-bar-text {
+	  font-size: 32rpx !important;
+	  font-weight: bold;
+	}
 </style>
