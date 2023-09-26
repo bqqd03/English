@@ -70,12 +70,12 @@ function submit(){
 			uni.switchTab({
 				url: '/pages/home',
 				success:function(){
-					if (JSON.parse(uni.getStorageSync('token')).role == 'teacher'){
+					if (res.data.user.role == 'teacher'){
 						uni.setTabBarItem({
 						  index: 4,
 						  visible:false
 						})
-					} else if (JSON.parse(uni.getStorageSync('token')).role=='student'){
+					} else if (res.data.user.role=='student'){
 						uni.setTabBarItem({
 						  index: 2,
 						  visible:false
