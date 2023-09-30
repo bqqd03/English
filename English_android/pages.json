@@ -16,41 +16,6 @@
 				"navigationBarTitleText": "首页"
 		  }
 		},{
-			"path": "pages/essay_control/index",
-			"style": {
-				"navigationBarTitleText": "文章管理"
-			}
-		},{
-			"path": "pages/class_control/index",
-			"style": {
-				"navigationBarTitleText": "班级管理"
-			}
-		},{
-			"path": "pages/homework/student_homework",
-			"style": {
-				"navigationBarTitleText": "我的作业"
-			}
-		},{
-			"path": "pages/class_control/class_details",
-			"style": {
-				"navigationBarTitleText": "班级信息"
-			}
-		},{
-			"path": "pages/class_control/addHomework",
-			"style": {
-				"navigationBarTitleText": "添加作业"
-			}
-		},{
-			"path": "pages/class_control/class_homework",
-			"style": {
-				"navigationBarTitleText": "班级作业"
-			}
-		},{
-			"path": "pages/homework/detail",
-			"style": {
-				"navigationBarTitleText": "作业详情"
-			}
-		},{
 			"path": "pages/exercise/index",
 			"style": {
 				"navigationStyle": "custom",
@@ -64,11 +29,6 @@
 			"path": "pages/exercise/save_audio",
 			"style": {
 				"navigationBarTitleText": "音频缓存"
-			}
-		},{
-			"path": "pages/user_control/index",
-			"style": {
-				"navigationBarTitleText": "我的"
 			}
 		},{
 			"path": "pages/exercise/ninegrid",
@@ -91,6 +51,31 @@
 				}
 			}
 		},{
+			"path": "pages/class_control/index",
+			"style": {
+				"navigationBarTitleText": "班级管理"
+			}
+		},{
+			"path": "pages/class_control/class_details",
+			"style": {
+				"navigationBarTitleText": "班级信息"
+			}
+		},{
+			"path": "pages/class_control/addHomework",
+			"style": {
+				"navigationBarTitleText": "添加作业"
+			}
+		},{
+			"path": "pages/class_control/class_homework",
+			"style": {
+				"navigationBarTitleText": "班级作业"
+			}
+		},{
+			"path": "pages/homework/student_homework",
+			"style": {
+				"navigationBarTitleText": "我的作业"
+			}
+		},{
 			"path": "pages/homework/ninegrid",
 			"style": {
 				"navigationStyle": "custom",
@@ -111,6 +96,16 @@
 				}
 			}
 		},{
+			"path": "pages/homework/detail",
+			"style": {
+				"navigationBarTitleText": "作业详情"
+			}
+		},{
+			"path": "pages/user_control/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},{
 			"path": "pages/user_control/user_info",
 			"style": {
 				"navigationBarTitleText": "个人信息"
@@ -119,16 +114,6 @@
 			"path": "pages/user_control/change_password",
 			"style": {
 				"navigationBarTitleText": "修改密码"
-			}
-		},{
-			"path": "pages/essay_control/select_word",
-			"style": {
-				"navigationBarTitleText": "句子选词"
-			}
-		},{
-			"path": "pages/essay_control/sentence_audio",
-			"style": {
-				"navigationBarTitleText": "句子音频"
 			}
 		},{
 			"path": "pages/user_control/my_score/index",
@@ -169,20 +154,7 @@
 				"iconPath": "static/icons/text.png",
 				"selectedIconPath": "static/icons/text-selected.png"
 			},{
-				"text":"文章管理",
-				"pagePath":"pages/essay_control/index",
-				"iconPath": "static/icons/control.png",
-				"selectedIconPath": "static/icons/control-selected.png"
-			},{
-				"text":"班级管理",
-				"pagePath":"pages/class_control/index",
-				"iconPath": "static/icons/control.png",
-				"selectedIconPath": "static/icons/control-selected.png"
-			},{
-				"text":"我的班级",
-				"pagePath":"pages/class_control/index",
-				"iconPath": "static/icons/class.png",
-				"selectedIconPath": "static/icons/class-selected.png"
+				"pagePath":"pages/class_control/index"
 			},{
 				"text":"我的",
 				"pagePath":"pages/user_control/index",

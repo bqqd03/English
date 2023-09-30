@@ -33,17 +33,17 @@ onShow(()=>{
 			success:function(){
 				if (JSON.parse(uni.getStorageSync('token')).role == 'teacher'){
 					uni.setTabBarItem({
-					  index: 4,
-					  visible:false
+						index: 2,//tabBar 的哪一项，从左边算起
+						text: '班级管理',//	tab 上的按钮文字
+						iconPath: "static/icons/control.png",
+						selectedIconPath: "static/icons/control-selected.png"
 					})
 				} else if (JSON.parse(uni.getStorageSync('token')).role=='student'){
 					uni.setTabBarItem({
-					  index: 2,
-					  visible:false
-					})
-					uni.setTabBarItem({
-					  index: 3,
-					  visible:false
+						index: 2,//tabBar 的哪一项，从左边算起
+						text: '我的班级',//	tab 上的按钮文字
+						iconPath: "static/icons/class.png",
+						selectedIconPath: "static/icons/class-selected.png"
 					})
 				}
 			}
@@ -71,18 +71,26 @@ function submit(){
 				url: '/pages/home',
 				success:function(){
 					if (res.data.user.role == 'teacher'){
+						// uni.setTabBarItem({
+						//   index: 3,
+						//   visible:false
+						// })
 						uni.setTabBarItem({
-						  index: 4,
-						  visible:false
+							index: 2,//tabBar 的哪一项，从左边算起
+							text: '班级管理',//	tab 上的按钮文字
+							iconPath: "static/icons/control.png",
+							selectedIconPath: "static/icons/control-selected.png"
 						})
 					} else if (res.data.user.role=='student'){
+						// uni.setTabBarItem({
+						//   index: 2,
+						//   visible:false
+						// })
 						uni.setTabBarItem({
-						  index: 2,
-						  visible:false
-						})
-						uni.setTabBarItem({
-						  index: 3,
-						  visible:false
+							index: 2,//tabBar 的哪一项，从左边算起
+							text: '我的班级',//	tab 上的按钮文字
+							iconPath: "static/icons/class.png",
+							selectedIconPath: "static/icons/class-selected.png"
 						})
 					}
 				}

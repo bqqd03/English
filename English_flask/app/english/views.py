@@ -201,6 +201,7 @@ def exercise_result():
         essay_info = EssayCatalog.query.filter_by(id=essay_id).first()
         essay_title = essay_info.to_json()['label']
         essay['essay_title'] = essay_title
+        essay['current_time'] = essay['current_time'].strftime("%Y-%m-%d %H:%M:%S")
         data.append(essay)
     return jsonify(data)
 

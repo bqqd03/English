@@ -17,7 +17,7 @@ let sentence_list=ref()
 onLoad(e=>{
 	https.post('/student/content_result',{
 		'homework_id':e.homework_id, 
-		'user_id':JSON.parse(localStorage.getItem('token')).user_id}
+		'user_id':JSON.parse(uni.getStorageSync('token')).user_id}
 	).then(res=>{
 		sentence_list.value = res.data
 	})
@@ -37,6 +37,8 @@ onLoad(e=>{
 		flex-wrap: wrap;
 		justify-content: center;
 		align-items: center;
+		margin-bottom: 10rpx;
+		margin-top: 10rpx;
 	}
 	.box_sentence {
 		margin: 0 3rpx;

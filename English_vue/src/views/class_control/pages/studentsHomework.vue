@@ -9,24 +9,29 @@
 
         <el-table :data="result" style="width: 100%;height: 100%" >
           <el-table-column type="index"  label="#" width="50%" />
-          <el-table-column align="center" label="头像" width="150%">
+          <el-table-column align="center" label="头像" width="100">
             <template #default="scope">
-              <el-avatar :src="scope.row.student_avatar"/>
+              <el-avatar :src="scope.row.avatar"/>
             </template>
           </el-table-column>
-          <el-table-column prop="student_name" label="学生姓名" width="120%" align="center"  />
-          <el-table-column prop="time" label="练习用时" width="120%" align="center"  />
+          <el-table-column prop="username" label="学生姓名" width="120%"  />
+          <el-table-column prop="email" label="学生邮箱" width="180"   />
+          <el-table-column prop="time" label="练习用时" width="120%" align="center" />
           <el-table-column label="练习成绩" width="120" align="center">
             <template #default="scope">
-              <span v-if="scope.row.score<60" style="color: crimson">{{ scope.row.score }}</span>
-              <span v-else style="color: ForestGreen">{{ scope.row.score }}</span>
-              <span> 分</span>
+              <div  v-if="scope.row.type==='1'">
+                <span v-if="scope.row.score<60" style="color: crimson">{{ scope.row.score }}</span>
+                <span v-else style="color: ForestGreen">{{ scope.row.score }}</span>
+                <span> 分</span>
+              </div>
+
             </template>
           </el-table-column>
-          <el-table-column prop="current_time" label="练习时间" align="center" />
+          <el-table-column prop="current_time" label="练习时间" width="180"/>
           <el-table-column align="center" label="详细情况">
             <template #default="scope">
-              <el-button @click="resultDetail(scope.row)">详细情况</el-button>
+              <el-button @click="resultDetail(scope.row)" v-if="scope.row.type==='1'">详细情况</el-button>
+              <span style="color: crimson" v-else >未提交</span>
             </template>
           </el-table-column>
         </el-table>
@@ -61,8 +66,8 @@ const route = useRoute()
 const router = useRouter()
 let result = ref()
 let class_id = ref()
-let submit_num = ref()
-let noSubmit_num = ref()
+let submit_num = ref(0)
+let noSubmit_num = ref(0)
 let user_id= JSON.parse(localStorage.getItem('token')).user_id
 
 onMounted(()=>{
@@ -70,10 +75,14 @@ onMounted(()=>{
     timeChange(res.data.data)
     result.value = res.data.data
     class_id.value=res.data.class_id
-    submit_num.value= res.data.data.length
-    https.post('/teacher/class_info',{'class_id':class_id.value}).then(res=>{
-      noSubmit_num.value=res.data.stu_num-submit_num.value
+    res.data.data.forEach(item=>{
+      if (item.type==='0'){
+        noSubmit_num.value+=1
+      } else {
+        submit_num.value+=1
+      }
     })
+    console.log(result)
   }).catch(()=>{
     ElMessage.error('未连接到服务器')
   })
@@ -81,10 +90,13 @@ onMounted(()=>{
 
 function timeChange(data) {
   for (let i=0;i<data.length;i++){
-    const temp = data[i].time
-    const minutes = Math.floor(temp / 60)
-    const seconds = temp % 60
-    data[i].time = minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0")
+    if (data[i].type==='1'){
+      const temp = data[i].time
+      const minutes = Math.floor(temp / 60)
+      const seconds = temp % 60
+      data[i].time = minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0")
+    }
+
   }
 }
 function resultDetail(row) {

@@ -113,7 +113,6 @@ function startDegree(essay_id){
 							title: '难度选择',
 							itemList: grade,
 							success: (g) => {
-								console.log(g);
 								uni.navigateTo({
 									url: '/pages/exercise/ninegrid?grade='+grade[g.tapIndex]+'&essay_id='+essay_id
 								})

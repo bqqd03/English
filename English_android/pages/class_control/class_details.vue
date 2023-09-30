@@ -1,22 +1,22 @@
 <template>
-	<view style="height: 200rpx;background-color: DarkGray;">
+	<view style="height: 210rpx;background-color: DarkGray;">
 		<view class="container">
 			<image :src="avatar" class="avatar"/>
-			<text style="color: #fff;"> {{ teacher_name + '老师' }} </text>
+			<text style="color: #fff;font-size: 33rpx;"> {{ teacher_name + '老师' }} </text>
 		</view>
 		<view class="className">
 			<text style="font-size: 38rpx;margin-bottom: 10rpx;"> {{ class_name}} </text>
-			<text style="background-color: #fff;color: cornflowerblue;width: 100rpx;">{{  '共 ' + stu_num + ' 人'  }}</text>
+			<text style="background-color: #fff;color: cornflowerblue;width: 100rpx;margin-bottom: 10rpx;">{{  '共 ' + stu_num + ' 人'  }}</text>
 			<text> {{ class_code }} </text>
 		</view>
-		<button style="width: 22%;position: absolute;top: 8%;right: 5%;" type="primary" size="mini" @click="getExercise()" v-if="role === 'teacher'">作业管理</button>
-		<button style="width: 22%;position: absolute;top: 8%;right: 5%;" type="primary" size="mini" @click="getHomework()" v-if="role === 'student'">我的作业</button>
+		<button style="width: 181rpx;position: absolute;top: 10%;right: 5%;" type="primary" size="mini" @click="getExercise()" v-if="role === 'teacher'">作业管理</button>
+		<button style="width: 181rpx;position: absolute;top: 10%;right: 5%;" type="primary" size="mini" @click="getHomework()" v-if="role === 'student'">我的作业</button>
 	</view>
 	<view v-for="item in classStu" style="margin-top: 3%;margin-left: 3%;display: flex;flex-direction: row;border-bottom: 1px solid black;padding-bottom: 3%;">
 		<image :src="common.fronturl +item.avatar" style="width: 40px;height: 40px;border-radius: 40rpx;"/>
 		<view style="margin-left: 3%;display: flex;flex-direction: column;">
-			<text> {{ item.username }}</text>
-			<text style="font-size: 10rpx;"> {{ '邮箱：' + item.email }}</text>
+			<text style="font-size: 40rpx;"> {{ item.username }}</text>
+			<text style="font-size: 25rpx;"> {{ '邮箱：' + item.email }}</text>
 		</view>
 	</view>
 </template>

@@ -10,7 +10,7 @@
             <el-card  style="margin-bottom:20px;height: 50%;width: 50%">
               <div class="class_head">
                 <span>班级信息</span>
-                <el-button type="text" @click="detailStu(item.class_id)">班级管理</el-button>
+                <el-button link @click="detailStu(item.class_id)">班级管理</el-button>
               </div>
               <div style=" display: flex;justify-content: space-between;">
                 <el-form>

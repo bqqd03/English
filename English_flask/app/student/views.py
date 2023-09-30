@@ -26,10 +26,9 @@ def homework_list():
         start_date = item['start_date']
         end_date = item['end_date']
         current = datetime.now()
-        currentDate = current.strftime('%Y-%m-%d')
-        if currentDate < start_date:
+        if current < start_date:
             item['status'] = '未开始'
-        elif start_date <= currentDate <= end_date:
+        elif start_date <= current <= end_date:
             item['status'] = '进行中'
         else:
             item['status'] = '已结束'

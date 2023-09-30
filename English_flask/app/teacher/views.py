@@ -631,6 +631,7 @@ def add_homework():
     end_date = request.json.get('end_date')
     grade = request.json.get('grade')
     homework_type = request.json.get('homework_type')
+    print('aa')
     if homework_name == '':
         return jsonify({'code': 400, 'msg': '请输入练习名称'})
     elif essay_id == '':
@@ -643,6 +644,8 @@ def add_homework():
         return jsonify({'code': 400, 'msg': '请选择文章难度'})
     elif homework_type == '':
         return jsonify({'code': 400, 'msg': '请选择练习形式'})
+    elif start_date>end_date:
+        return jsonify({'code': 400, 'msg': '截止时间不能小于发布时间'})
     else:
         exercise_data = Homework(homework_name=homework_name,
                                  essay_id=essay_id,
@@ -667,6 +670,8 @@ def class_homework():
         essay_name = Essay.query.filter_by(essay_id=item['essay_id']).first()
         item['class_name'] = class_name.to_json()['class_name']
         item['essay_name'] = essay_name.to_json()['title']
+        item['start_date'] = item['start_date'].strftime("%Y-%m-%d %H:%M:%S")
+        item['end_date'] = item['end_date'].strftime("%Y-%m-%d %H:%M:%S")
         data.append(item)
 
     return jsonify(data)
@@ -676,14 +681,20 @@ def class_homework():
 def students_homework():
     homework_id = request.json.get('homework_id')
     homework_data = Homework.query.filter_by(homework_id=homework_id).first()
-    class_data = HomeworkResult.query.filter_by(homework_id=homework_id).all()
+    class_data = ClassInfo.query.filter_by(class_id=homework_data.class_id).first()
+    class_student = TypeUser.query.filter_by(type_id=class_data.class_code).all()
     data = []
-    for i in class_data:
-        item = i.to_json()
-        student_data = User.query.filter_by(user_id=item['stu_id']).first()
-        item['student_name'] = student_data.to_json()['username']
-        item['student_avatar'] = student_data.to_json()['avatar']
-        data.append(item)
+    for i in class_student:
+        student_data = User.query.filter_by(user_id=i.user_id).first()
+        student_info = student_data.to_json()
+        homework_result = HomeworkResult.query.filter_by(stu_id=i.user_id,homework_id=homework_id).first()
+        if homework_result is not None:
+            student_info.update(homework_result.to_json())
+            student_info['current_time'] = student_info['current_time'].strftime("%Y-%m-%d %H:%M:%S")
+            student_info['type'] = '1'
+        else:
+            student_info['type'] = '0'
+        data.append(student_info)
 
     return jsonify({'data': data, 'class_id': homework_data.to_json()['class_id']})
 
@@ -792,25 +803,6 @@ def get_catalog():
         catalog = EssayCatalog.query.filter_by(id=catalog_data['type_id']).first()
         catalog_info = catalog.to_json()
         data.append(catalog_info['label'])
-    return jsonify(data)
-
-@teacher.route('/class_homework_android', methods=['POST'])
-def class_homework_android():
-    class_id = request.json.get('class_id')
-    homework_data = Homework.query.filter_by(class_id=class_id).all()
-    data = []
-    for i in homework_data:
-        item = i.to_json()
-        class_data = ClassInfo.query.filter_by(class_id=item['class_id']).first()
-        essay_data = Essay.query.filter_by(essay_id=item['essay_id']).first()
-        stu_num = TypeUser.query.filter_by(type_id=class_data.to_json()['class_code']).count()
-        submit_num = HomeworkResult.query.filter_by(homework_id=item['homework_id']).count()
-        item['class_name'] = class_data.to_json()['class_name']
-        item['essay_name'] = essay_data.to_json()['title']
-        item['submit_num'] = submit_num
-        item['noSubmit_num'] = stu_num - submit_num
-        data.append(item)
-
     return jsonify(data)
 
 

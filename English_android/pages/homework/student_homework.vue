@@ -1,26 +1,28 @@
 <template>
 	<view v-for="item in homeworkClass">
-		<uni-card style="height: 280rpx;">
+		<uni-card style="height: 320rpx;">
 			<view style="display: flex;flex-direction: column;float: left">
-				<text style="font-size: 30rpx;font-weight: 600;">{{ item.homework_name }}</text>
-<!-- 				<text>{{ '开始于 '+item.start_date }}</text> -->
-				<text>{{ '文章名称：' + item.essay_name }}</text>
-				<text>{{ '文章难度：' + item.grade }}</text>
-				<text>{{ '练习形式：' + item.homework_type }}</text>
-				<text>{{ '开始时间：'+item.start_date }}</text>
-				<text>{{ '截止时间：'+item.end_date }}</text>
+				<text style="font-size: 40rpx;font-weight: 600;margin-bottom: 10rpx;margin-left: -15rpx;color: black;">{{ item.homework_name }}</text>
+				<view style="margin-left: 5rpx;display: flex;flex-direction: column">
+					<text>{{ '文章名称：' + item.essay_name }}</text>
+					<text>{{ '文章难度：' + item.grade }}</text>
+					<text>{{ '练习形式：' + item.homework_type }}</text>
+					<text>{{ '开始时间：'+item.start_date }}</text>
+					<text>{{ '截止时间：'+item.end_date }}</text>
+				</view>
+				
 			</view>
-			<view style="float: right;display: flex;flex-direction: column;text-align: right;">
-				<view style="font-size: 30rpx;">
+			<view style="float: right;display: flex;flex-direction: column;text-align: center;margin-top: 10rpx;">
+				<view style="font-size: 32rpx;">
 					<text v-if="item.status!=='已完成'">{{ item.status }}</text>
 					<div v-if="item.status==='已完成'">
 						<text>总分：</text>
-						<text v-if="item.score<60" style="color: crimson;font-size: 30px">{{ item.score }}</text>
-						<text v-else style="color: ForestGreen;font-size: 30px">{{ item.score }}</text>
+						<text v-if="item.score<60" style="color: crimson;font-size: 52rpx">{{ item.score }}</text>
+						<text v-else style="color: ForestGreen;font-size: 52rpx">{{ item.score }}</text>
 						<text> 分</text>
 					</div>
 				</view>
-				<view style="margin-top: 135rpx;">
+				<view style="margin-top: 160rpx;">
 					<button size="mini" type="primary" v-if="item.status==='进行中'" @click="begin(item)" >开始练习</button>
 					<button size="mini" type="primary" v-if="item.status==='已完成'" @click="detail(item)">查看详情</button>
 				</view>
@@ -50,14 +52,8 @@ onLoad(e=>{
 		ElMessage.error('未连接到服务器')
 	})
 })
-// function addHomework(){
-// 	uni.navigateTo({
-// 		url: '/pages/class_control/addHomework?class_id=' + class_id.value
-// 	})
-// }
 
 function begin(item) {
-  console.log(item)
   if (item.homework_type==='选择'){
 	  uni.navigateTo({
 	  	url: '/pages/homework/ninegrid?homework_id='+item.homework_id

@@ -41,31 +41,35 @@
         </el-select>
       </el-space>
     </el-form-item>
-    <el-form-item label="开始日期">
-      <el-space size="large">
+    <el-form-item label="发布日期">
+      <el-config-provider :locale="locale">
         <el-date-picker
             v-model="addForm.start_date"
-            type="date"
-            placeholder="选择开始日期"
-            value-format="YYYY-MM-DD"
+            type="datetime"
+            placeholder="选择发布日期"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
             :disabledDate="start_limit"
+            :locale="locale"
         />
-      </el-space>
+      </el-config-provider>
     </el-form-item>
-    <el-form-item label="结束日期">
-      <el-space size="large">
+    <el-form-item label="截止日期">
+      <el-config-provider :locale="locale">
         <el-date-picker
             v-model="addForm.end_date"
-            type="date"
-            placeholder="选择结束日期"
-            value-format="YYYY-MM-DD"
+            type="datetime"
+            placeholder="选择截止日期"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
             :disabledDate="end_limit"
+            :locale="locale"
         />
-      </el-space>
+      </el-config-provider>
     </el-form-item>
 
     <el-form-item class="formFooter">
-      <el-button @click="save()" type="primary">确 定</el-button>
+      <el-button @click="save()" type="primary">发布</el-button>
     </el-form-item>
   </el-form>
 
@@ -75,9 +79,11 @@
 import {onMounted, reactive, ref} from "vue";
 import https from "@/apis/axio";
 import {ElMessage} from "element-plus";
+import zhCn from "element-plus/lib/locale/lang/zh-cn";
 
 let class_name=ref()
 let essayList=ref([])
+let locale=zhCn
 
 // 子组件接收父组件传递过来的值
 const props = defineProps({
@@ -104,11 +110,12 @@ const typeList=[
 ]
 
 onMounted(()=>{
+  const dateTime = new Date(+new Date()+8*3600*1000)
+  addForm.start_date = new Date(dateTime).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
   https.post('/teacher/class_info',{'class_id':props.classID}).then(res=>{
     class_name.value=res.data.class_name
   })
   https.post('/teacher/essay_list',{'user_id':JSON.parse(localStorage.getItem('token')).user_id}).then(res=>{
-    console.log(res.data)
     res.data.forEach(item=>{
       essayList.value.push({
         'label':item.title,
@@ -168,4 +175,5 @@ function save() {
 .formFooter{
   float: right;
 }
+
 </style>

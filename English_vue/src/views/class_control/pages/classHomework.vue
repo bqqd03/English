@@ -8,17 +8,16 @@
         </template>
         <el-scrollbar :style="{ height: scrollHeight }">
           <el-table :data="homeworkClass" style="width: 100%;height: 100%" tooltip-effect="dark" >
-            <el-table-column prop="homework_id" label="作业ID" width="80%" />
-            <el-table-column prop="homework_name" label="作业名称" width="120%"  />
-            <el-table-column prop="essay_name" label="文章名称" width="150%" show-overflow-tooltip />
-            <el-table-column prop="grade" label="文章难度" width="80%" align="center" />
-            <el-table-column prop="homework_type" label="练习形式" width="80%" align="center" />
-            <el-table-column prop="class_name" label="所属班级" width="120%" align="center"/>
-            <el-table-column prop="start_date" label="开始时间" width="120%" align="center"/>
-            <el-table-column prop="end_date" label="结束时间" width="120%" align="center"/>
+            <el-table-column prop="homework_id" label="作业ID" width="80" />
+            <el-table-column prop="homework_name" label="作业名称" width="120"  />
+            <el-table-column prop="essay_name" label="文章名称" width="150" show-overflow-tooltip />
+            <el-table-column prop="grade" label="文章难度" width="100" />
+            <el-table-column prop="homework_type" label="练习形式" width="100"  />
+            <el-table-column prop="start_date" label="开始时间" width="165"/>
+            <el-table-column prop="end_date" label="结束时间" width="165" />
             <el-table-column align="center" label="学生答题情况">
               <template #default="scope">
-                <el-button type="text" @click="getStudent(scope.row.homework_id)">详情</el-button>
+                <el-button link style="color: #409eff" @click="getStudent(scope.row.homework_id)">详情</el-button>
               </template>
             </el-table-column>
 
@@ -57,6 +56,7 @@ onMounted(()=>{
 function getExercise() {
   https.post('/teacher/class_homework',{'class_id':route.query.class_id}).then(res=>{
     homeworkClass.value=res.data
+    console.log(res.data)
   }).catch(()=>{
     ElMessage.error('未连接到服务器')
   })

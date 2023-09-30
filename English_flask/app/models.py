@@ -139,7 +139,7 @@ class EssayResult(db.Model):
     grade = db.Column(db.String(10), index=True)
     score = db.Column(db.String(20), nullable=False, index=True)
     time = db.Column(db.String(20), index=True)
-    current_time = db.Column(db.String(20), index=True)
+    current_time = db.Column(db.DateTime, index=True)
     exercise_num = db.Column(db.String(10), nullable=False, index=True)
 
     def to_json(self):
@@ -198,8 +198,8 @@ class Homework(db.Model):
     grade = db.Column(db.String(10), nullable=False, index=True)
     homework_type = db.Column(db.String(10), nullable=False, index=True)
     class_id = db.Column(db.String(10), nullable=False, index=True)
-    start_date = db.Column(db.String(10), nullable=False, index=True)
-    end_date = db.Column(db.String(10), nullable=False, index=True)
+    start_date = db.Column(db.DateTime, nullable=False, index=True)
+    end_date = db.Column(db.DateTime, nullable=False, index=True)
 
     def to_json(self):
         json_data = {
@@ -222,7 +222,7 @@ class HomeworkResult(db.Model):
     stu_id = db.Column(db.String(10), nullable=False, index=True)
     time = db.Column(db.String(10), nullable=False, index=True)
     score = db.Column(db.String(10), nullable=False, index=True)
-    current_time = db.Column(db.String(20), index=True)
+    current_time = db.Column(db.DateTime, index=True)
 
     def to_json(self):
         json_data = {

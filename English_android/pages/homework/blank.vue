@@ -80,7 +80,7 @@ onLoad(e=>{
 	
 	https.post('/student/sentence',{
 		'homework_id':e.homework_id, 
-		'user_id':JSON.parse(localStorage.getItem('token')).user_id}
+		'user_id':JSON.parse(uni.getStorageSync('token')).user_id}
 	).then(res=>{
 		essay.essay_data=res.data.data
 		essay.essay_length=res.data.data.length
