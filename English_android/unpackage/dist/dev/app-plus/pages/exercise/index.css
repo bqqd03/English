@@ -673,3 +673,8 @@ body{
 	  margin-right: 10px;
 	  width: 22%;
 }
+ .uni-nav-bar-text {
+	  font-size: 1rem !important;
+	  font-weight: bold;
+}
+

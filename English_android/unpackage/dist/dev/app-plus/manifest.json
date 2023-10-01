@@ -162,10 +162,7 @@
           "selectedIconPath": "/static/icons/text-selected.png"
         },
         {
-          "text": "文章管理",
-          "pagePath": "pages/essay_control/index",
-          "iconPath": "/static/icons/control.png",
-          "selectedIconPath": "/static/icons/control-selected.png"
+          "pagePath": "pages/class_control/index"
         },
         {
           "text": "我的",

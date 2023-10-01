@@ -32,6 +32,8 @@ def homework_list():
             item['status'] = '进行中'
         else:
             item['status'] = '已结束'
+        item['start_date'] = item['start_date'].strftime("%Y-%m-%d %H:%M:%S")
+        item['end_date'] = item['end_date'].strftime("%Y-%m-%d %H:%M:%S")
         dataList.append(item)
     for j in dataList:
         result_data = HomeworkResult.query.filter_by(homework_id=j['homework_id'], stu_id=user_id).first()
