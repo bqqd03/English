@@ -4,7 +4,7 @@
       <el-card>
         <template #header>
           <span>布置作业</span>
-          <el-button @click="back" type="primary" :icon="Back">返回</el-button>
+          <el-button @click="back" type="primary">返回</el-button>
         </template>
         <el-scrollbar :style="{ height: scrollHeight }">
           <el-table :data="homeworkClass" style="width: 100%;height: 100%" tooltip-effect="dark" >
@@ -13,8 +13,16 @@
             <el-table-column prop="essay_name" label="文章名称" width="150" show-overflow-tooltip />
             <el-table-column prop="grade" label="文章难度" width="100" />
             <el-table-column prop="homework_type" label="练习形式" width="100"  />
-            <el-table-column prop="start_date" label="开始时间" width="165"/>
-            <el-table-column prop="end_date" label="结束时间" width="165" />
+            <el-table-column prop="start_date" label="开始时间" width="165">
+              <template #default="scope">
+                <text>{{ scope.row.start_date.slice(0,16) }}</text>
+              </template>
+            </el-table-column>
+            <el-table-column prop="end_date" label="结束时间" width="165">
+              <template #default="scope">
+                <text>{{ scope.row.end_date.slice(0,16) }}</text>
+              </template>
+            </el-table-column>
             <el-table-column align="center" label="学生答题情况">
               <template #default="scope">
                 <el-button link style="color: #409eff" @click="getStudent(scope.row.homework_id)">详情</el-button>
@@ -40,7 +48,6 @@ import {onMounted, ref} from "vue";
 import https from "@/apis/axio";
 import {ElMessage} from "element-plus";
 import {useRoute,useRouter} from "vue-router";
-import { Back } from '@element-plus/icons-vue'
 import AddHomework from "../components/addHomework.vue"
 
 let homeworkClass=ref()
