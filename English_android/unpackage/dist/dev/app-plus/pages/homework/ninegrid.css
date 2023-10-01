@@ -507,80 +507,164 @@
   text-decoration: none;
   text-align: center;
 }
+/* 水平间距 */
+/* 水平间距 */
+.uni-status-bar[data-v-7920e3e0] {
+  height: 20px;
+}
+/* 水平间距 */
+/* 水平间距 */
+.uni-nav-bar-text[data-v-26544265] {
+  font-size: 1.0625rem;
+}
+.uni-nav-bar-right-text[data-v-26544265] {
+  font-size: 12px;
+}
+.uni-navbar__content[data-v-26544265] {
+  position: relative;
+  background-color: transparent;
+}
+.uni-navbar-btn-text[data-v-26544265] {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  line-height: 12px;
+}
+.uni-navbar__header[data-v-26544265] {
+  display: flex;
+  padding: 0 10px;
+  flex-direction: row;
+  height: 44px;
+  font-size: 12px;
+}
+.uni-navbar__header-btns[data-v-26544265] {
+  overflow: hidden;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  width: 3.75rem;
+  justify-content: center;
+  align-items: center;
+}
+.uni-navbar__header-btns-left[data-v-26544265] {
+  display: flex;
+  width: 3.75rem;
+  justify-content: flex-start;
+  align-items: center;
+}
+.uni-navbar__header-btns-right[data-v-26544265] {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+.uni-navbar__header-container[data-v-26544265] {
+  display: flex;
+  flex: 1;
+  padding: 0 10px;
+  overflow: hidden;
+}
+.uni-navbar__header-container-inner[data-v-26544265] {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  overflow: hidden;
+}
+.uni-navbar__placeholder-view[data-v-26544265] {
+  height: 44px;
+}
+.uni-navbar--fixed[data-v-26544265] {
+  position: fixed;
+  z-index: 998;
+  left: 0;
+  right: 0;
+}
+.uni-navbar--shadow[data-v-26544265] {
+  box-shadow: 0 1px 6px #ccc;
+}
+.uni-navbar--border[data-v-26544265] {
+  border-bottom-width: 0.03125rem;
+  border-bottom-style: solid;
+  border-bottom-color: #eee;
+}
+.uni-ellipsis-1[data-v-26544265] {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 
 body{
 		background-color: #F5F5F5;
 }
-.pronames-one-label {
-		background-color: #fff;
-		line-height: 3.4375rem;
-		box-sizing: border-box;
-		padding: 0px 3%;
+.sentence_box{
+		margin: 20px 10px;
+	    display: flex;
+	    flex-direction: row;
+		flex-wrap: wrap;
+}
+.sentence {
+		margin: 2px;
+		font-size: 18px;
 		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
+}
+.select_grid{
+		bottom: 4.6875rem;
+		left: 0.625rem;
+		position:fixed; 
+	    display: flex;
+	    flex-wrap: wrap;
+}
+.nine_btn {
+		width: 7.03125rem;
+		height: 2.8125rem;
+	    background-color: #7caadc;
+	    color: #000;
+	    border-radius: 8px;
+	    font-size: 16px;
+		font-weight: 450;
+		display: flex;
 		align-items: center;
-		border-bottom: 2px #eaeaea solid;
+		justify-content: center;
 }
-.pronames-one-label uni-text {
-		font-size: 15px;
-}
-	
-	/* 二级 */
-.pronames-two-label {
-		background-color: #fff;
-		width: 100%;
-		height: 3.4375rem;
-		line-height: 3.4375rem;
+.error_btn {
+		width: 7.03125rem;
+		height: 2.8125rem;
+	    background-color: crimson;
+	    color: #fff;
+	    border-radius: 8px;
+	    font-size: 16px;
+		font-weight: 450;
 		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		box-sizing: border-box;
-		padding: 0px 3%;
-		border-bottom: 1px #eee solid;
-}
-.pronames-two-label uni-text {
-		font-size: 15px;
-		margin-left: 5%;
-}
-	
-	
-	/* 三级 */
-.pronames_three-label {
-		background-color: #fff;
-		width: 97%;
-		padding-left: 3%;
-		height: 3.125rem;
-		line-height: 3.125rem;
-		display: flex;
-		flex-direction: row;
-		border-bottom: 1px #f1f1f1 solid;
 		align-items: center;
+		justify-content: center;
 }
-.essay_label{
-		width: 60%;
-		font-size: 15px;
-		margin-left: 8%;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+.control {
+	    display: flex;
+	    justify-content: space-between;
+		position:fixed; 
+		bottom: 3.125rem;
 }
-	
-	/* 展开收起效果 start */
-.oneshow .pronames_two{ display: block;
+.audio_control {
+		position:fixed;
+	    display: flex;
+		left: 7.8125rem;
 }
-.onehide .pronames_two{ display: none;
+.translate_btn{
+		width: 35px;
+		height: 35px;
+		position:fixed;
+		right: 2.5rem;
 }
-	
-	/* 展开收起效果 end */
-.twoshow .pronames_three{ display: block;
+.translate_text{
+		margin: 13px;
+		font-size: 18px;
+		display: flex;
 }
-.twohide .pronames_three{ display: none;
-}
-.small-button {
-	  font-size: 12px; 
-	  border-radius: 4px;
-	  width: 3.75rem;
-	  position: fixed;
-	  right: 0.9375rem;
+ .uni-nav-bar-text {
+	  font-size: 1rem !important;
+	  font-weight: bold;
 }

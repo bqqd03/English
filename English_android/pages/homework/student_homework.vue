@@ -1,14 +1,16 @@
 <template>
 	<view v-for="item in homeworkClass">
-		<uni-card style="height: 320rpx;">
+		<uni-card>
 			<view style="display: flex;flex-direction: column;float: left">
 				<text style="font-size: 40rpx;font-weight: 600;margin-bottom: 10rpx;margin-left: -15rpx;color: black;">{{ item.homework_name }}</text>
-				<view style="margin-left: 5rpx;display: flex;flex-direction: column">
+				<view style="margin-left: 5rpx;display: flex;flex-direction: column;margin-bottom: 10rpx;">
+					<view style="display: flex;flex-direction: row;margin-bottom: 10rpx;">
+						<view class="label">{{ item.grade }}</view>
+						<view class="label" style="margin-left: 15rpx;">{{ item.homework_type }}</view>
+					</view>
 					<text>{{ '文章名称：' + item.essay_name }}</text>
-					<text>{{ '文章难度：' + item.grade }}</text>
-					<text>{{ '练习形式：' + item.homework_type }}</text>
-					<text>{{ '开始时间：'+item.start_date }}</text>
-					<text>{{ '截止时间：'+item.end_date }}</text>
+					<text>{{ '截止时间：'+item.end_date.slice(0,16) }}</text>
+					
 				</view>
 				
 			</view>
@@ -22,7 +24,7 @@
 						<text> 分</text>
 					</div>
 				</view>
-				<view style="margin-top: 160rpx;">
+				<view style="margin-top: 110rpx;margin-bottom: 10rpx;">
 					<button size="mini" type="primary" v-if="item.status==='进行中'" @click="begin(item)" >开始练习</button>
 					<button size="mini" type="primary" v-if="item.status==='已完成'" @click="detail(item)">查看详情</button>
 				</view>
@@ -84,5 +86,14 @@ function detail(item) {
 		padding-top: 15rpx;
 		font-size: 30rpx;
 		border: 1px #eaeaea solid;
+	}
+	.label{
+		width: 90rpx;
+		height: 38rpx;
+		background-color: DarkGray;
+		display:flex;
+		vertical-align: center; /**垂直居中*/
+		justify-content: center;
+		color: black;
 	}
 </style>

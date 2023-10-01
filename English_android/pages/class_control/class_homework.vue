@@ -8,7 +8,7 @@
 		<uni-card>
 			<view>
 				<text style="font-size: 40rpx;font-weight: 600;margin-left: -15rpx;color: black;">{{ item.homework_name }}</text>
-				<button size="mini" type="primary" style="width: 100rpx;padding-left: 10rpx;padding-right: 10rpx;float: right;" @click="options()">操作</button>
+				<button size="mini" type="primary" style="width: 100rpx;padding-left: 10rpx;padding-right: 10rpx;float: right;" @click="options(item)">操作</button>
 				<view style="margin-left: -15rpx;margin-top: 5rpx;display: flex;flex-direction: column">
 					<text>{{ '截止于 '+item.end_date.slice(0,16) }}</text>
 					<text style="margin-bottom: 5rpx;">{{ ' 创建者：' + name }}</text>
@@ -37,7 +37,11 @@ onLoad(e=>{
 	https.post('/teacher/class_homework',{'class_id':e.class_id}).then(res=>{
 		homeworkClass.value=res.data
 	}).catch(()=>{
-		ElMessage.error('未连接到服务器')
+		uni.showToast({
+			title: 未连接到服务器,
+			icon:'error',
+			duration: 3000,
+		})
 	})
 })
 function addHomework(){
@@ -45,11 +49,16 @@ function addHomework(){
 		url: '/pages/class_control/addHomework?class_id=' + class_id.value
 	})
 }
-function options(){
+function options(item){
+	const homework_id = item.homework_id.toString()
 	uni.showActionSheet({
-		itemList: ['修改','删除'],
+		itemList: ['作业详情','修改','删除'],
 		success: (item) => {
-			console.log(item);
+			if(item.tapIndex===0){
+				uni.navigateTo({
+					url: '/pages/class_control/homework_detail?homework_id=' + homework_id
+				})
+			}
 		}
 	})
 }

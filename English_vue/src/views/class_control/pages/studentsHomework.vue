@@ -27,7 +27,7 @@
 
             </template>
           </el-table-column>
-          <el-table-column prop="current_time" label="练习时间" width="180"/>
+            <el-table-column prop="current_time" label="练习时间" width="180"/>
           <el-table-column align="center" label="详细情况">
             <template #default="scope">
               <el-button @click="resultDetail(scope.row)" v-if="scope.row.type==='1'">详细情况</el-button>
@@ -82,7 +82,6 @@ onMounted(()=>{
         submit_num.value+=1
       }
     })
-    console.log(result)
   }).catch(()=>{
     ElMessage.error('未连接到服务器')
   })

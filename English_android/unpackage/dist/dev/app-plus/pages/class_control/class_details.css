@@ -1,0 +1,26 @@
+
+body{
+		background-color: #F5F5F5;
+		height: 100%;
+}
+.container{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding-left: 0.75rem;
+		padding-top: 0.5625rem;
+		width: 30%;
+}
+.avatar{
+		width: 60px;
+		height: 60px;
+		border-radius: 1.875rem;
+}
+.className{
+		position: absolute;
+		left: 38%;
+		top: 2%;
+		color: #fff;
+		display: flex;
+		flex-direction: column;
+}

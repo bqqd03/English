@@ -15,9 +15,15 @@ import https from "@/axios.js"
 
 let sentence_list=ref()
 onLoad(e=>{
+	let user_id='';
+	if ('user_id' in e){
+		user_id = e.user_id
+	} else {
+		user_id = JSON.parse(uni.getStorageSync('token')).user_id
+	}
 	https.post('/student/content_result',{
 		'homework_id':e.homework_id, 
-		'user_id':JSON.parse(uni.getStorageSync('token')).user_id}
+		'user_id': user_id}
 	).then(res=>{
 		sentence_list.value = res.data
 	})
