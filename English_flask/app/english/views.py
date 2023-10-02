@@ -26,9 +26,9 @@ def essay_catalog():
                 essay = k.to_json()
                 essay_id = essay['id']
                 essay_info = Essay.query.filter_by(essay_id=essay_id).first()
-                essay_type = essay_info.to_json()['type']
+                # essay_type = essay_info.to_json()['type']
 
-                essay['type'] = essay_type
+                essay['type'] = essay_info.type
                 essays.append(essay)
             textbook['essays'] = essays
             textbooks.append(textbook)

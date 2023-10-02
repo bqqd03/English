@@ -9,7 +9,7 @@ from openpyxl import Workbook, load_workbook
 from . import teacher
 from .. import db
 from ..models import EssayCatalog, ParagraphDegree, Paragraph, Essay, ClassInfo, TypeUser, User, Homework, \
-    HomeworkResult, HomeworkSentence
+    HomeworkResult, HomeworkSentence, EssayResult,Ranking, SentenceResult
 import nltk
 
 
@@ -90,6 +90,7 @@ def add_all():
     essay_file = request.files.get('essay_file')
     audio_file = request.files.get('audio_file')
     whisper_file = request.files.get('whisper_file')
+    word_num = request.form.get('word_num')
 
     # folder = os.path.abspath('..') + r'\dist\assets'
     folder = os.path.abspath('..') + r'\English_vue\public\assets'
@@ -104,7 +105,7 @@ def add_all():
     audio_file.save(audio_path)
 
     text = docx2txt.process(essay_file)
-    sentences = split_sentences(text)
+    sentences = split_sentences(text, int(word_num))
 
     whisper_excel = load_workbook(filename=whisper_path)
     sheet = whisper_excel.active
@@ -129,30 +130,6 @@ def add_all():
                 audio_word.append({'word': current_word[j], 'time': round((j * word_time) + float(i['start']), 2)})
 
     audio_sentence = []
-    # for i in sentences:
-    #     target_words = split_punctuation(i)
-    #
-    #     start = 0
-    #     end = 0
-    #     for j in range(len(audio_word)):
-    #         start_word = target_words[0]
-    #         compare_word = audio_word[j]['word']
-    #         if start_word == compare_word:
-    #             num = 0
-    #             try:
-    #                 for k in range(len(target_words)):
-    #                     if target_words[k] == audio_word[j + k]['word']:
-    #                         num += 1
-    #                     else:
-    #                         break
-    #                 if num == len(target_words):
-    #                     start = audio_word[j]['time']
-    #                     end = audio_word[j + (num - 1)]['time']
-    #             except Exception:
-    #                 pass
-    #     audio_sentence.append({'text': i, 'start': start, 'end': end})
-    # for i in audio_sentence:
-    #     print(i)
     for i in sentences:
         target_words = split_punctuation(i)
 
@@ -268,6 +245,7 @@ def add_all():
 def add_essay():
     essay_id = request.form.get('essay_id')
     essay_file = request.files.get('essay_file')
+    word_num = request.form.get('word_num')
 
     # folder = os.path.abspath('..') + r'\dist\assets'
     folder = os.path.abspath('..') + r'\English_vue\public\assets'
@@ -276,7 +254,7 @@ def add_essay():
     essay_file.save(essay_path)
 
     text = docx2txt.process(essay_file)
-    sentences = split_sentences(text)
+    sentences = split_sentences(text, int(word_num))
 
     sen_id = 1
     for i in sentences:
@@ -644,7 +622,7 @@ def add_homework():
         return jsonify({'code': 400, 'msg': '请选择文章难度'})
     elif homework_type == '':
         return jsonify({'code': 400, 'msg': '请选择练习形式'})
-    elif start_date>end_date:
+    elif start_date > end_date:
         return jsonify({'code': 400, 'msg': '截止时间不能小于发布时间'})
     else:
         exercise_data = Homework(homework_name=homework_name,
@@ -687,7 +665,7 @@ def students_homework():
     for i in class_student:
         student_data = User.query.filter_by(user_id=i.user_id).first()
         student_info = student_data.to_json()
-        homework_result = HomeworkResult.query.filter_by(stu_id=i.user_id,homework_id=homework_id).first()
+        homework_result = HomeworkResult.query.filter_by(stu_id=i.user_id, homework_id=homework_id).first()
         if homework_result is not None:
             student_info.update(homework_result.to_json())
             student_info['current_time'] = student_info['current_time'].strftime("%Y-%m-%d %H:%M:%S")
@@ -806,16 +784,58 @@ def get_catalog():
     return jsonify(data)
 
 
-def split_sentences(text):
+@teacher.route('/delete_data', methods=['POST'])
+def delete_data():
+    essay_id = request.json.get('essay_id')
+    essay_data = Essay.query.filter_by(essay_id=essay_id).first()
+    essay_data.essay_address = ''
+    essay_data.audio_address = ''
+    essay_data.type = 'empty'
+    paragraphs = Paragraph.query.filter_by(essay_id=essay_id).all()
+    for a in paragraphs:
+        db.session.delete(a)
+    paragraph_degree = ParagraphDegree.query.filter_by(essay_id=essay_id).all()
+    for b in paragraph_degree:
+        db.session.delete(b)
+    essay_result = EssayResult.query.filter_by(essay_id=essay_id).all()
+    for c in essay_result:
+        user_data = User.query.filter_by(user_id=c.user_id).first()
+        ranking_data = Ranking.query.filter_by(user_name=user_data.username).first()
+        if ranking_data.essay_num == '0':
+            db.session.delete(ranking_data)
+        else:
+            score = int(ranking_data.essay_num)*int(ranking_data.score) - int(c.score)
+            essay_num = int(ranking_data.essay_num)-1
+            ranking_data.essay_num = str(essay_num)
+            ranking_data.score = round(score / essay_num, 0)
+
+        db.session.delete(c)
+    sentence_result = SentenceResult.query.filter_by(essay_id=essay_id).all()
+    for g in sentence_result:
+        db.session.delete(g)
+    homework_data = Homework.query.filter_by(essay_id=essay_id).all()
+    for d in homework_data:
+        homework_result = HomeworkResult.query.filter_by(homework_id=d.homework_id).all()
+        for e in homework_result:
+            db.session.delete(e)
+        homework_sentence = HomeworkSentence.query.filter_by(homework_id=d.homework_id).all()
+        for f in homework_sentence:
+            db.session.delete(f)
+        db.session.delete(d)
+
+    return jsonify({'code': 200})
+
+
+def split_sentences(text, word_num):
     sentences = nltk.sent_tokenize(text)
     new_sentences = []
     sub_sentence = ""
 
     for sentence in sentences:
         words = sentence.split()
-        if len(words) < 40:
+        if len(words) < word_num:
             sub_word = sub_sentence.split()
-            if len(sub_word) + len(words) > 40:
+            if len(sub_word) + len(words) > word_num:
                 new_sentences.append(sub_sentence.strip())
                 sub_sentence = sentence
             else:

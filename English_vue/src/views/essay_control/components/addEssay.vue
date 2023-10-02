@@ -37,6 +37,9 @@
       <el-form-item label="文章上传"  v-if="options.file_button">
         <input type="file" multiple  @change="onEssayChange" />
       </el-form-item>
+    <el-form-item label="每句词数"  v-if="options.file_button">
+      <el-input-number v-model="addForm.word_num" :min="40"/>
+    </el-form-item>
 
       <el-form-item class="formFooter">
         <el-button :disabled="options.btn_disabled" @click="saveCatalog()" type="primary">确 定</el-button>
@@ -64,7 +67,8 @@ const addForm = reactive({
   essay_info:'',
   essay_file: null,
   audio_file: null,
-  whisper_file:null
+  whisper_file:null,
+  word_num:0
 })
 
 const options = reactive({
@@ -182,6 +186,7 @@ function saveCatalog() {
     const formData = new FormData();
     formData.append('essay_id', addForm.essay_info)
     formData.append('essay_file', addForm.essay_file)
+    formData.append('word_num', addForm.word_num)
     https.post('/teacher/add_essay',formData).then(res=>{
       if (res.data.code===200){
         ElMessage.success('添加成功')
@@ -209,6 +214,7 @@ function saveCatalog() {
     formData.append('essay_file', addForm.essay_file)
     formData.append('audio_file', addForm.audio_file)
     formData.append('whisper_file', addForm.whisper_file)
+    formData.append('word_num', addForm.word_num)
     https.post('/teacher/add_all',formData).then(res=>{
       if (res.data.code===200){
         ElMessage.success('添加成功')

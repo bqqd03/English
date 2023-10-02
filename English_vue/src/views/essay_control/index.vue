@@ -44,9 +44,13 @@
     </el-col>
   </el-row>
 
-  <el-dialog v-model="options.dialogSetting" title="文章设置" width="300">
-    <el-button type="primary" @click="startDegree()">开始选词</el-button>
-    <el-button  v-if="options.type==='all'" type="primary" @click="startAudio()">句子音频</el-button>
+  <el-dialog v-model="options.dialogSetting" title="文章设置" width="350" >
+    <div style="display: flex;justify-content: center;">
+      <el-button type="primary" @click="startDegree()">开始选词</el-button>
+      <el-button  v-if="options.type==='all'" type="primary" @click="startAudio()">句子音频</el-button>
+      <el-button type="danger" @click="deleteData()">删除数据</el-button>
+    </div>
+
   </el-dialog>
 
 </template>
@@ -126,6 +130,15 @@ function editTitle(item) {
     if (res.data.code===200){
       item.isEdit = 1
       ElMessage.success('标题修改成功')
+    }
+  })
+}
+function deleteData() {
+  https.post('/teacher/delete_data',{'essay_id':options.essay_id}).then(res=>{
+    if (res.data.code===200){
+      ElMessage.success('删除成功')
+      options.dialogSetting = false
+      getCatalog()
     }
   })
 }
