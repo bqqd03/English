@@ -6,7 +6,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, index=True, primary_key=True)
     username = db.Column(db.String(12), nullable=False, index=True)
-    password = db.Column(db.String(126), nullable=False, index=True)
+    password = db.Column(db.String(500), nullable=False, index=True)
     email = db.Column(db.String(26), index=True)
     avatar = db.Column(db.String(62), index=True)
     role = db.Column(db.String(10), index=True)
