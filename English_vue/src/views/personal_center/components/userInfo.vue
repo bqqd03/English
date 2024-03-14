@@ -29,7 +29,6 @@ import https from "@/apis/axio"
 import {ElMessage} from "element-plus"
 
 let role = JSON.parse(localStorage.getItem('token')).role
-let classCode = ref([])
 const userInfo=ref()
 const class_type=ref()
 const editForm=reactive({

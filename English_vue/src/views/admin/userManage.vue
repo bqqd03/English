@@ -28,8 +28,8 @@
           </el-table-column>
           <el-table-column align="center" label="操作">
             <template #default="scope">
-              <el-button type="primary" @click = "openDialog('edit',scope.row)" :icon="Edit">修改</el-button>
-              <el-button type="danger" @click = "openDialog('delete',scope.row)" :icon="Delete">删除</el-button>
+              <el-button style="width: 40%"type="primary" @click = "openDialog('edit',scope.row)" :icon="Edit">修改</el-button>
+              <el-button style="width: 40%" type="danger" @click = "openDialog('delete',scope.row)" :icon="Delete">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
