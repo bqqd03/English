@@ -1,15 +1,17 @@
+import glob
 import os
 import re
 import string
 
 import docx2txt
+import pandas as pd
 from flask import request, jsonify
 from openpyxl import Workbook, load_workbook
 
 from . import teacher
 from .. import db
 from ..models import EssayCatalog, ParagraphDegree, Paragraph, Essay, ClassInfo, TypeUser, User, Homework, \
-    HomeworkResult, HomeworkSentence, EssayResult,Ranking, SentenceResult
+    HomeworkResult, HomeworkSentence, EssayResult, Ranking, SentenceResult
 import nltk
 
 
@@ -420,42 +422,129 @@ def add_audio():
     return jsonify({'code': 200})
 
 
+# @teacher.route('/get_degree', methods=['POST'])
+# def get_degree():
+#     essay_id = request.json.get('essay_id')
+#     data = []
+#     easy_paragraph = ParagraphDegree.query.filter_by(essay_id=essay_id, grade='简单').first()
+#     medium_paragraph = ParagraphDegree.query.filter_by(essay_id=essay_id, grade='中等').first()
+#     hard_paragraph = ParagraphDegree.query.filter_by(essay_id=essay_id, grade='困难').first()
+#     if easy_paragraph is None:
+#         data.append({'label': '简单', 'type': '2'})
+#     else:
+#         data.append({'label': '简单', 'type': '1'})
+#
+#     if medium_paragraph is None:
+#         data.append({'label': '中等', 'type': '2'})
+#     else:
+#         data.append({'label': '中等', 'type': '1'})
+#
+#     if hard_paragraph is None:
+#         data.append({'label': '困难', 'type': '2'})
+#     else:
+#         data.append({'label': '困难', 'type': '1'})
+#
+#     return jsonify(data)
+
 @teacher.route('/get_degree', methods=['POST'])
 def get_degree():
     essay_id = request.json.get('essay_id')
     data = []
-    easy_paragraph = ParagraphDegree.query.filter_by(essay_id=essay_id, grade='简单').first()
-    medium_paragraph = ParagraphDegree.query.filter_by(essay_id=essay_id, grade='中等').first()
-    hard_paragraph = ParagraphDegree.query.filter_by(essay_id=essay_id, grade='困难').first()
-    if easy_paragraph is None:
-        data.append({'label': '简单', 'type': '2'})
-    else:
-        data.append({'label': '简单', 'type': '1'})
-
-    if medium_paragraph is None:
-        data.append({'label': '中等', 'type': '2'})
-    else:
-        data.append({'label': '中等', 'type': '1'})
-
-    if hard_paragraph is None:
-        data.append({'label': '困难', 'type': '2'})
-    else:
-        data.append({'label': '困难', 'type': '1'})
-
+    folder_path = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
+    for item in os.listdir(folder_path):
+        if essay_id in item:
+            x = item.replace('.xlsx', '').split('_')
+            if '简单' in item:
+                data.append({'value': item.replace('.xlsx', ''), 'label': x[1] + x[2]})
+            elif '中等' in item:
+                data.append({'value': item.replace('.xlsx', ''), 'label': x[1] + x[2]})
+            elif '困难' in item:
+                data.append({'value': item.replace('.xlsx', ''), 'label': x[1] + x[2]})
     return jsonify(data)
+
+
+@teacher.route('/upload_essayDifficulty', methods=['POST'])
+def upload_essayDifficulty():
+    file = request.files.get('file')
+    folder = os.path.abspath('..') + r'\English_vue\public\assets'
+    file_path = os.path.join(folder + r'\essay_difficulty', file.filename)
+    file.save(file_path)
+    return jsonify({'code': 200})
+
+
+# @teacher.route('/select_list', methods=['POST'])
+# def select_list():
+#     essay_id = request.json.get('essay_id')
+#     grade = request.json.get('grade')
+#     data = []
+#     paragraph_info = Paragraph.query.filter_by(essay_id=essay_id).all()
+#
+#     for i in paragraph_info:
+#         paragraph = i.to_json()
+#         sentence_article = paragraph['article']
+#         word = re.findall(r"[a-zA-Z]+|[-.,!?;:\"\'’”]", sentence_article)
+#
+#         for index in range(len(word)):
+#             if index == len(word):
+#                 break
+#             if word[index] == '\'' and len(word[index + 1]) <= 2 and word[index + 1].isalpha():
+#                 word[index - 1] = word[index - 1] + word[index] + word[index + 1]
+#                 del word[index]
+#                 del word[index]
+#             if word[index] == '’' and len(word[index + 1]) <= 2 and word[index + 1].isalpha():
+#                 word[index - 1] = word[index - 1] + word[index] + word[index + 1]
+#                 del word[index]
+#                 del word[index]
+#             if word[index] == '-':
+#                 word[index - 1] = word[index - 1] + word[index] + word[index + 1]
+#                 del word[index]
+#                 del word[index]
+#             if re.match(r'^[a-z].*[.]$', word[index]):
+#                 new_strings = [word[index][:-1]] + word[index][-1:].split()
+#                 split_index = word.index(word[index])
+#                 word[split_index:split_index + 1] = new_strings
+#         print(word)
+#         word_id = 1
+#         word_list = []
+#
+#         paragraph_selected = ParagraphDegree.query.filter_by(essay_id=essay_id, sen_id=paragraph['sen_id'],
+#                                                              grade=grade).first()
+#         if paragraph_selected is None:
+#             print('a')
+#             for j in word:
+#                 if is_english_word(j):
+#                     word_list.append({'id': word_id, 'text': j, 'type': 'normal'})
+#                     word_id += 1
+#                 else:
+#                     word_list.append({'text': j, 'type': 'normal'})
+#         else:
+#             selected_id = paragraph_selected.to_json()['word_id'].split(',')
+#             for j in word:
+#                 if is_english_word(j):
+#                     if str(word_id) in selected_id:
+#                         word_list.append({'id': word_id, 'text': j, 'type': 'selected'})
+#                     else:
+#                         word_list.append({'id': word_id, 'text': j, 'type': 'normal'})
+#                     word_id += 1
+#                 else:
+#                     word_list.append({'text': j})
+#         data.append({'essay_id': essay_id, 'sen_id': paragraph['sen_id'], 'word_list': word_list})
+#
+#     return jsonify(data)
 
 
 @teacher.route('/select_list', methods=['POST'])
 def select_list():
     essay_id = request.json.get('essay_id')
-    grade = request.json.get('grade')
     data = []
-    paragraph_info = Paragraph.query.filter_by(essay_id=essay_id).all()
+    folder = os.path.abspath('..') + r'\English_vue\public\assets'
+    file_path = os.path.join(folder + r'\essay_difficulty', essay_id + '.xlsx')
+    df = pd.read_excel(file_path)
 
-    for i in paragraph_info:
-        paragraph = i.to_json()
-        sentence_article = paragraph['article']
-        word = re.findall(r"[a-zA-Z]+|[-.,!?;:\"\'’”]", sentence_article)
+    excel_dict = df.to_dict(orient='records')
+
+    for item in excel_dict:
+        word = re.findall(r"[a-zA-Z]+|[-.,!?;:\"\'’”]", item['句子内容'])
 
         for index in range(len(word)):
             if index == len(word):
@@ -479,51 +568,56 @@ def select_list():
         word_id = 1
         word_list = []
 
-        paragraph_selected = ParagraphDegree.query.filter_by(essay_id=essay_id, sen_id=paragraph['sen_id'],
-                                                             grade=grade).first()
-        if paragraph_selected is None:
-            for j in word:
-                if is_english_word(j):
+        selected_id = item['单词编号'].split(',')
+        for j in word:
+            if is_english_word(j):
+                if str(word_id) in selected_id:
+                    word_list.append({'id': word_id, 'text': j, 'type': 'selected'})
+                else:
                     word_list.append({'id': word_id, 'text': j, 'type': 'normal'})
-                    word_id += 1
-                else:
-                    word_list.append({'text': j, 'type': 'normal'})
-        else:
-            selected_id = paragraph_selected.to_json()['word_id'].split(',')
-            for j in word:
-                if is_english_word(j):
-                    if str(word_id) in selected_id:
-                        word_list.append({'id': word_id, 'text': j, 'type': 'selected'})
-                    else:
-                        word_list.append({'id': word_id, 'text': j, 'type': 'normal'})
-                    word_id += 1
-                else:
-                    word_list.append({'text': j})
-        data.append({'essay_id': essay_id, 'sen_id': paragraph['sen_id'], 'word_list': word_list})
+                word_id += 1
+            else:
+                word_list.append({'text': j})
+        data.append({'sen_id': item['句子编号'], 'word_list': word_list, 'word_id': item['单词编号']})
 
     return jsonify(data)
 
 
+# @teacher.route('/selected_word', methods=['POST'])
+# def selected_word():
+#     selected_list = request.json.get('selected_list')
+#     for i in selected_list:
+#         paragraph_degree = ParagraphDegree.query.filter_by(essay_id=i['essay_id'], sen_id=i['sen_id'],
+#                                                            grade=i['grade']).first()
+#         if paragraph_degree is None:
+#             degree_data = ParagraphDegree(essay_id=i['essay_id'],
+#                                           sen_id=i['sen_id'],
+#                                           word_id=','.join(str(j) for j in i['select_id']),
+#                                           grade=i['grade'])
+#             db.session.add(degree_data)
+#             db.session.commit()
+#         else:
+#             paragraph_degree.essay_id = i['essay_id']
+#             paragraph_degree.sen_id = i['sen_id']
+#             paragraph_degree.word_id = ','.join(str(j) for j in i['select_id'])
+#             paragraph_degree.grade = i['grade']
+#             db.session.commit()
+#
+#     return jsonify({'code': 200})
+
 @teacher.route('/selected_word', methods=['POST'])
 def selected_word():
+    essay_id = request.json.get('essay_id')
     selected_list = request.json.get('selected_list')
-    for i in selected_list:
-        paragraph_degree = ParagraphDegree.query.filter_by(essay_id=i['essay_id'], sen_id=i['sen_id'],
-                                                           grade=i['grade']).first()
-        if paragraph_degree is None:
-            degree_data = ParagraphDegree(essay_id=i['essay_id'],
-                                          sen_id=i['sen_id'],
-                                          word_id=','.join(str(j) for j in i['select_id']),
-                                          grade=i['grade'])
-            db.session.add(degree_data)
-            db.session.commit()
-        else:
-            paragraph_degree.essay_id = i['essay_id']
-            paragraph_degree.sen_id = i['sen_id']
-            paragraph_degree.word_id = ','.join(str(j) for j in i['select_id'])
-            paragraph_degree.grade = i['grade']
-            db.session.commit()
 
+    folder = os.path.abspath('..') + r'\English_vue\public\assets'
+    file_path = os.path.join(folder + r'\essay_difficulty', essay_id + '.xlsx')
+    df = pd.read_excel(file_path)
+    excel_dict = df.to_dict(orient='records')
+    for index in range(len(excel_dict)):
+        excel_dict[index]['单词编号'] = selected_list[index]['word_id']
+    df = pd.DataFrame(excel_dict)
+    df.to_excel(file_path, index=False)
     return jsonify({'code': 200})
 
 
@@ -804,8 +898,8 @@ def delete_data():
         if ranking_data.essay_num == '0':
             db.session.delete(ranking_data)
         else:
-            score = int(ranking_data.essay_num)*int(ranking_data.score) - int(c.score)
-            essay_num = int(ranking_data.essay_num)-1
+            score = int(ranking_data.essay_num) * int(ranking_data.score) - int(c.score)
+            essay_num = int(ranking_data.essay_num) - 1
             ranking_data.essay_num = str(essay_num)
             ranking_data.score = round(score / essay_num, 0)
 
