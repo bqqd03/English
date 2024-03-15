@@ -80,38 +80,30 @@ const result_sentence=reactive({
   sen_id:'',
   word:'',
   num:'',
-  time:''
+  time:'',
+  essay_name:''
 })
 const result_essay=reactive({
   user_id: JSON.parse(localStorage.getItem('token')).user_id,
   homework_id:route.query.homework_id,
   score: 0,
-  time:''
+  time:'',
+  essay_name:''
 })
 
 onMounted(()=>{
-  https.post('/student/sentence',
-      {'homework_id':route.query.homework_id,
-        'user_id':JSON.parse(localStorage.getItem('token')).user_id
-      }
-  ).then(res=>{
+  https.post('/student/sentence', {'homework_id':route.query.homework_id}).then(res=>{
     essay.essay_data=res.data.data
+    result_essay.essay_name=res.data.essay_name
+    result_sentence.essay_name=res.data.essay_name
     audio_address.value =res.data.audio_address
     essay.essay_length=res.data.data.length
-    essay.current_sentence = res.data.start_id
-    options.all_num = res.data.all_num
-    options.correct_num = res.data.correct_num
-    options.clock = res.data.time
-    if (res.data.time!==0){
-      options.select_time=res.data.time
-    }
+
     essay.percentage= ((essay.current_sentence+1) / parseInt(essay.essay_length) )*100
     handleText(essay.essay_data[essay.current_sentence])
     clock = setInterval(() => {
       options.clock++
     }, 1000)
-  }).catch(()=>{
-    ElMessage.error('未连接到服务器')
   })
 })
 
@@ -300,10 +292,12 @@ function sentence_prev() {
 }
 
 function back() {
-  clearTimeout(timer)
-  clearInterval(clock)
-  audioPlayer.value.pause()
-  router.push('/student_class')
+  https.post('/student/exercise_back', {'homework_id':route.query.homework_id,'stu_id':JSON.parse(localStorage.getItem('token')).user_id}).then(()=>{
+    clearTimeout(timer)
+    clearInterval(clock)
+    audioPlayer.value.pause()
+    router.push('/student_class')
+  })
 }
 
 

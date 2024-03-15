@@ -23,9 +23,19 @@
     </el-form-item>
     <el-form-item label="文章难度">
       <el-space size="large">
-        <el-select v-model="addForm.grade" placeholder="请选择练习文章难度">
+        <el-select v-model="addForm.grade" placeholder="请选择练习文章难度" @change="selectWord()">
           <el-option
               v-for="item in gradeList"
+              :label="item.label"
+              :value="item.value"/>
+        </el-select>
+      </el-space>
+    </el-form-item>
+    <el-form-item label="选词版本">
+      <el-space size="large">
+        <el-select v-model="addForm.essay_name" placeholder="请选择练习选词版本">
+          <el-option
+              v-for="item in essayNameList"
               :label="item.label"
               :value="item.value" />
         </el-select>
@@ -42,7 +52,7 @@
       </el-space>
     </el-form-item>
     <el-form-item label="发布日期">
-      <el-config-provider :locale="locale">
+      <el-config-provider>
         <el-date-picker
             v-model="addForm.start_date"
             type="datetime"
@@ -50,12 +60,11 @@
             format="YYYY-MM-DD HH:mm:ss"
             value-format="YYYY-MM-DD HH:mm:ss"
             :disabledDate="start_limit"
-            :locale="locale"
         />
       </el-config-provider>
     </el-form-item>
     <el-form-item label="截止日期">
-      <el-config-provider :locale="locale">
+      <el-config-provider>
         <el-date-picker
             v-model="addForm.end_date"
             type="datetime"
@@ -63,7 +72,6 @@
             format="YYYY-MM-DD HH:mm:ss"
             value-format="YYYY-MM-DD HH:mm:ss"
             :disabledDate="end_limit"
-            :locale="locale"
         />
       </el-config-provider>
     </el-form-item>
@@ -79,11 +87,11 @@
 import {onMounted, reactive, ref} from "vue";
 import https from "@/apis/axio";
 import {ElMessage} from "element-plus";
-import zhCn from "element-plus/lib/locale/lang/zh-cn";
+
 
 let class_name=ref()
 let essayList=ref([])
-let locale=zhCn
+let essayNameList=ref([])
 
 // 子组件接收父组件传递过来的值
 const props = defineProps({
@@ -95,6 +103,7 @@ const addForm = reactive({
   class_id:props.classID,
   essay_id:'',
   grade:'',
+  essay_name:'',
   homework_type:'',
   start_date:'',
   end_date:''
@@ -153,6 +162,11 @@ function save() {
   })
 }
 
+function selectWord() {
+  https.post('/teacher/homework_selectWord',{'essay_id':addForm.essay_id,'grade':addForm.grade}).then(res=>{
+    essayNameList.value = res.data
+  })
+}
 </script>
 
 <style scoped lang="scss">

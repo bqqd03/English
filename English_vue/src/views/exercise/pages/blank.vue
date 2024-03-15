@@ -105,9 +105,6 @@ onMounted(()=>{
     result_essay.exercise_num = res.data.exercise_num
     result_sentence.exercise_num = res.data.exercise_num
 
-    if (res.data.time!==0){
-      options.select_time=res.data.time
-    }
     essay.percentage= ((essay.current_sentence+1) / parseInt(essay.essay_length) )*100
     handleText(essay.essay_data[essay.current_sentence])
     clock = setInterval(() => {

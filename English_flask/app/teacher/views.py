@@ -699,6 +699,7 @@ def add_homework():
     class_id = request.json.get('class_id')
     homework_name = request.json.get('homework_name')
     essay_id = request.json.get('essay_id')
+    essay_name = request.json.get('essay_name')
     start_date = request.json.get('start_date')
     end_date = request.json.get('end_date')
     grade = request.json.get('grade')
@@ -714,6 +715,8 @@ def add_homework():
         return jsonify({'code': 400, 'msg': '请选择结束日期'})
     elif grade == '':
         return jsonify({'code': 400, 'msg': '请选择文章难度'})
+    elif essay_name == '':
+        return jsonify({'code': 400, 'msg': '请选择选词版本'})
     elif homework_type == '':
         return jsonify({'code': 400, 'msg': '请选择练习形式'})
     elif start_date > end_date:
@@ -721,6 +724,7 @@ def add_homework():
     else:
         exercise_data = Homework(homework_name=homework_name,
                                  essay_id=essay_id,
+                                 essay_name=essay_name,
                                  class_id=class_id,
                                  start_date=start_date,
                                  end_date=end_date,
@@ -769,6 +773,21 @@ def students_homework():
         data.append(student_info)
 
     return jsonify({'data': data, 'class_id': homework_data.to_json()['class_id']})
+
+
+@teacher.route('/homework_selectWord', methods=['POST'])
+def homework_selectWord():
+    essay_id = request.json.get('essay_id')
+    grade = request.json.get('grade')
+
+    data = []
+    folder_path = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
+    for item in os.listdir(folder_path):
+        if essay_id in item and grade in item:
+            x = item.replace('.xlsx', '').split('_')
+            data.append({'value': item.replace('.xlsx', ''), 'label': x[1] + x[2]})
+
+    return jsonify(data)
 
 
 @teacher.route('/add_class', methods=['POST'])

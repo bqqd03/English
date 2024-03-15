@@ -109,6 +109,7 @@ class SentenceResult(db.Model):
     id = db.Column(db.Integer, index=True, primary_key=True)
     user_id = db.Column(db.String(10), nullable=False, index=True)
     essay_id = db.Column(db.String(10), nullable=False, index=True)
+    essay_name = db.Column(db.String(62), nullable=False, index=True)
     grade = db.Column(db.String(10), index=True)
     sen_id = db.Column(db.String(10), nullable=False, index=True)
     word = db.Column(db.String(62), index=True)
@@ -121,6 +122,7 @@ class SentenceResult(db.Model):
             'id': self.id,
             'user_id': self.user_id,
             'essay_id': self.essay_id,
+            'essay_name': self.essay_id,
             'grade': self.grade,
             'sen_id': self.sen_id,
             'word': self.word,
@@ -136,6 +138,7 @@ class EssayResult(db.Model):
     id = db.Column(db.Integer, index=True, primary_key=True)
     user_id = db.Column(db.String(10), nullable=False, index=True)
     essay_id = db.Column(db.String(10), nullable=False, index=True)
+    essay_name = db.Column(db.String(62), nullable=False, index=True)
     grade = db.Column(db.String(10), index=True)
     score = db.Column(db.String(20), nullable=False, index=True)
     time = db.Column(db.String(20), index=True)
@@ -147,6 +150,7 @@ class EssayResult(db.Model):
             'id': self.id,
             'user_id': self.user_id,
             'essay_id': self.essay_id,
+            'essay_name': self.essay_id,
             'grade': self.grade,
             'score': self.score,
             'time': self.time,
@@ -195,6 +199,7 @@ class Homework(db.Model):
     homework_id = db.Column(db.Integer, index=True, primary_key=True)
     homework_name = db.Column(db.String(10), nullable=False, index=True)
     essay_id = db.Column(db.String(10), nullable=False, index=True)
+    essay_name = db.Column(db.String(62), nullable=False, index=True)
     grade = db.Column(db.String(10), nullable=False, index=True)
     homework_type = db.Column(db.String(10), nullable=False, index=True)
     class_id = db.Column(db.String(10), nullable=False, index=True)
@@ -206,6 +211,7 @@ class Homework(db.Model):
             'homework_id': self.homework_id,
             'homework_name': self.homework_name,
             'essay_id': self.essay_id,
+            'essay_name': self.essay_name,
             'grade': self.grade,
             'homework_type': self.homework_type,
             'class_id': self.class_id,

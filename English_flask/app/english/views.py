@@ -1,4 +1,8 @@
+import os
+import random
 import re
+
+import pandas as pd
 
 from . import english
 from flask import request, jsonify
@@ -54,78 +58,127 @@ def essay_degree():
     return jsonify(data)
 
 
+# @english.route('/sentence', methods=['POST'])
+# def sentence_get():
+#     essay_id = request.json.get('essay_id')
+#     user_id = request.json.get('user_id')
+#     grade = request.json.get('grade')
+#     english_paragraph = Paragraph.query.filter_by(essay_id=essay_id).all()
+#     data = []
+#
+#     for i in english_paragraph:
+#         sentence = i.to_json()
+#         select_id = ParagraphDegree.query.filter_by(essay_id=essay_id, grade=grade, sen_id=sentence['sen_id']).first()
+#         id_list = select_id.to_json()
+#         id_list = id_list['word_id'].split(',')
+#         article_data = sentence['article']
+#
+#         sentence_article = split_word(article_data)
+#         sentence['article'] = []
+#         num = 0
+#
+#         for k in sentence_article:
+#             if 'word_id' in k:
+#                 if k['word_id'] in id_list:
+#                     sentence['article'].append({'id': k['word_id'], 'text': k['word'], 'type': 'select'})
+#                     num += 1
+#                 else:
+#                     sentence['article'].append({'id': k['word_id'], 'text': k['word'], 'type': 'normal'})
+#             else:
+#                 sentence['article'].append({'text': k['word'], 'type': 'normal'})
+#         sentence['select_num'] = num
+#         data.append(sentence)
+#
+#     audio_address = Essay.query.filter_by(essay_id=essay_id).first()
+#     exercise_num = EssayResult.query.filter_by(essay_id=essay_id, user_id=user_id, grade=grade).count()
+#
+#     paragraphs = SentenceResult.query.filter_by(essay_id=essay_id, user_id=user_id, grade=grade,
+#                                                 exercise_num=exercise_num + 1).all()
+#
+#     if len(paragraphs) == 0:
+#         start_id = 0
+#         correct_num = 0
+#         all_num = 0
+#         time = 0
+#     else:
+#         start = paragraphs[-1].to_json()
+#         start_id = int(start['sen_id'])
+#         correct_num = 0
+#         all_num = 0
+#         time = 0
+#         for i in paragraphs:
+#             paragraph_data = i.to_json()
+#             sentence = [item for item in data if item['sen_id'] == paragraph_data['sen_id']]
+#             word_id = paragraph_data['word'].split(',')
+#             word_num = paragraph_data['num'].split(',')
+#             word_time = paragraph_data['time'].split(',')
+#
+#             for k in sentence[0]['article']:
+#                 if k['type'] == 'select':
+#                     if str(k['id']) in word_id:
+#                         index = word_id.index(str(k['id']))
+#                         if word_num[index] == '1':
+#                             k['type'] = 'correct'
+#                         else:
+#                             k['type'] = 'error'
+#             for j in word_num:
+#                 if j == '1':
+#                     correct_num += 1
+#                 all_num += 1
+#             for h in word_time:
+#                 time += int(h)
+#     return jsonify(
+#         {'audio_address': audio_address.to_json()['audio_address'], 'data': data, 'exercise_num': exercise_num + 1,
+#          'start_id': start_id, 'correct_num': correct_num, 'all_num': all_num, 'time': time})
+
+
 @english.route('/sentence', methods=['POST'])
 def sentence_get():
     essay_id = request.json.get('essay_id')
     user_id = request.json.get('user_id')
     grade = request.json.get('grade')
-    english_paragraph = Paragraph.query.filter_by(essay_id=essay_id).all()
+
     data = []
+    essay_name_list = []
+    folder_path = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
+    for item in os.listdir(folder_path):
+        if essay_id in item and grade in item:
+            essay_name_list.append(item)
+    num_items = len(essay_name_list)
+    random_index = random.randrange(num_items)
+    essay_name = essay_name_list[random_index]
 
-    for i in english_paragraph:
-        sentence = i.to_json()
-        select_id = ParagraphDegree.query.filter_by(essay_id=essay_id, grade=grade, sen_id=sentence['sen_id']).first()
-        id_list = select_id.to_json()
-        id_list = id_list['word_id'].split(',')
-        article_data = sentence['article']
+    file_path = os.path.join(folder_path, essay_name)
+    df = pd.read_excel(file_path)
 
+    excel_dict = df.to_dict(orient='records')
+    for item in excel_dict:
+        selected_id = item['单词编号'].split(',')
+        article_data = item['句子内容']
         sentence_article = split_word(article_data)
-        sentence['article'] = []
         num = 0
 
+        article = []
         for k in sentence_article:
             if 'word_id' in k:
-                if k['word_id'] in id_list:
-                    sentence['article'].append({'id': k['word_id'], 'text': k['word'], 'type': 'select'})
+                if k['word_id'] in selected_id:
+                    article.append({'id': k['word_id'], 'text': k['word'], 'type': 'select'})
                     num += 1
                 else:
-                    sentence['article'].append({'id': k['word_id'], 'text': k['word'], 'type': 'normal'})
+                    article.append({'id': k['word_id'], 'text': k['word'], 'type': 'normal'})
             else:
-                sentence['article'].append({'text': k['word'], 'type': 'normal'})
-        sentence['select_num'] = num
-        data.append(sentence)
+                article.append({'text': k['word'], 'type': 'normal'})
+
+        data.append({'id': item['句子编号'], 'essay_id': essay_id, 'sen_id': item['句子编号'], 'article': article,
+                     'translate': None, 'audio_star': item['音频起始位置'], 'audio_end': item['音频结束位置'],
+                     'select_num': num})
 
     audio_address = Essay.query.filter_by(essay_id=essay_id).first()
-    exercise_num = EssayResult.query.filter_by(essay_id=essay_id, user_id=user_id, grade=grade).count()
+    exercise_num = EssayResult.query.filter_by(essay_id=essay_id, user_id=user_id, essay_name=essay_name).count()
 
-    paragraphs = SentenceResult.query.filter_by(essay_id=essay_id, user_id=user_id, grade=grade,
-                                                exercise_num=exercise_num + 1).all()
-
-    if len(paragraphs) == 0:
-        start_id = 0
-        correct_num = 0
-        all_num = 0
-        time = 0
-    else:
-        start = paragraphs[-1].to_json()
-        start_id = int(start['sen_id'])
-        correct_num = 0
-        all_num = 0
-        time = 0
-        for i in paragraphs:
-            paragraph_data = i.to_json()
-            sentence = [item for item in data if item['sen_id'] == paragraph_data['sen_id']]
-            word_id = paragraph_data['word'].split(',')
-            word_num = paragraph_data['num'].split(',')
-            word_time = paragraph_data['time'].split(',')
-
-            for k in sentence[0]['article']:
-                if k['type'] == 'select':
-                    if str(k['id']) in word_id:
-                        index = word_id.index(str(k['id']))
-                        if word_num[index] == '1':
-                            k['type'] = 'correct'
-                        else:
-                            k['type'] = 'error'
-            for j in word_num:
-                if j == '1':
-                    correct_num += 1
-                all_num += 1
-            for h in word_time:
-                time += int(h)
     return jsonify(
         {'audio_address': audio_address.to_json()['audio_address'], 'data': data, 'exercise_num': exercise_num + 1,
-         'start_id': start_id, 'correct_num': correct_num, 'all_num': all_num, 'time': time})
+         'essay_name': essay_name})
 
 
 @english.route('/result_sentence', methods=['POST'])
@@ -138,8 +191,10 @@ def result_sentence():
     num = request.json.get('num')
     time = request.json.get('time')
     exercise_num = request.json.get('exercise_num')
+    essay_name = request.json.get('essay_name')
     result = SentenceResult(user_id=user_id,
                             essay_id=essay_id,
+                            essay_name=essay_name,
                             grade=grade,
                             sen_id=sen_id,
                             word=word[:-1],
@@ -155,6 +210,7 @@ def result_sentence():
 def result_essay():
     user_id = request.json.get('user_id')
     essay_id = request.json.get('essay_id')
+    essay_name = request.json.get('essay_name')
     grade = request.json.get('grade')
     score = request.json.get('score')
     time = request.json.get('time')
@@ -162,6 +218,7 @@ def result_essay():
     now = datetime.now()
     result = EssayResult(user_id=user_id,
                          essay_id=essay_id,
+                         essay_name=essay_name,
                          grade=grade,
                          score=round(score, 0),
                          time=time,
@@ -187,6 +244,20 @@ def result_essay():
         ranking.score = round(essay_score / essay_num, 0)
         db.session.commit()
 
+    return jsonify({'code': 200})
+
+
+@english.route('/exercise_back', methods=['POST'])
+def exercise_back():
+    essay_id = request.json.get('essay_id')
+    exercise_num = request.json.get('exercise_num')
+    essay_name = request.json.get('essay_name')
+    user_id = request.json.get('user_id')
+    result = SentenceResult.query.filter_by(essay_id=essay_id, essay_name=essay_name, exercise_num=exercise_num,
+                                            user_id=user_id).all()
+    for i in result:
+        db.session.delete(i)
+    db.session.commit()
     return jsonify({'code': 200})
 
 

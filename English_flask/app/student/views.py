@@ -1,7 +1,9 @@
+import os
 import re
 import string
 from datetime import *
 
+import pandas as pd
 from flask import request, jsonify
 
 from . import student
@@ -146,79 +148,131 @@ def word_result():
     return jsonify(wordList)
 
 
+# @student.route('/sentence', methods=['POST'])
+# def sentence_get():
+#     homework_id = request.json.get('homework_id')
+#     user_id = request.json.get('user_id')
+#     homework = Homework.query.filter_by(homework_id=homework_id).first()
+#     homework_data = homework.to_json()
+#
+#     english_paragraph = Paragraph.query.filter_by(essay_id=homework_data['essay_id']).all()
+#     data = []
+#
+#     for i in english_paragraph:
+#         sentence = i.to_json()
+#         select_id = ParagraphDegree.query.filter_by(essay_id=homework_data['essay_id'], grade=homework_data['grade'],
+#                                                     sen_id=sentence['sen_id']).first()
+#         id_list = select_id.to_json()
+#         id_list = id_list['word_id'].split(',')
+#         article_data = sentence['article']
+#
+#         sentence_article = split_word(article_data)
+#         sentence['article'] = []
+#         num = 0
+#
+#         for k in sentence_article:
+#             if 'word_id' in k:
+#                 if k['word_id'] in id_list:
+#                     sentence['article'].append({'id': k['word_id'], 'text': k['word'], 'type': 'select'})
+#                     num += 1
+#                 else:
+#                     sentence['article'].append({'id': k['word_id'], 'text': k['word'], 'type': 'normal'})
+#             else:
+#                 sentence['article'].append({'text': k['word'], 'type': 'normal'})
+#         sentence['select_num'] = num
+#         data.append(sentence)
+#
+#     audio_address = Essay.query.filter_by(essay_id=homework_data['essay_id']).first()
+#
+#     paragraphs = HomeworkSentence.query.filter_by(homework_id=homework_id, stu_id=user_id).all()
+#
+#     if len(paragraphs) == 0:
+#         start_id = 0
+#         correct_num = 0
+#         all_num = 0
+#         time = 0
+#     else:
+#         start = paragraphs[-1].to_json()
+#         start_id = int(start['sen_id'])
+#         correct_num = 0
+#         all_num = 0
+#         time = 0
+#         for i in paragraphs:
+#             paragraph_data = i.to_json()
+#             sentence = [item for item in data if item['sen_id'] == paragraph_data['sen_id']]
+#             word_id = paragraph_data['word'].split(',')
+#             word_num = paragraph_data['num'].split(',')
+#             word_time = paragraph_data['time'].split(',')
+#
+#             for k in sentence[0]['article']:
+#                 if k['type'] == 'select':
+#                     if str(k['id']) in word_id:
+#                         index = word_id.index(str(k['id']))
+#                         if word_num[index] == '1':
+#                             k['type'] = 'correct'
+#                         else:
+#                             k['type'] = 'error'
+#             for j in word_num:
+#                 if j == '1':
+#                     correct_num += 1
+#                 all_num += 1
+#             for h in word_time:
+#                 time += int(h)
+#     return jsonify(
+#         {'audio_address': audio_address.to_json()['audio_address'], 'data': data, 'start_id': start_id,
+#          'correct_num': correct_num, 'all_num': all_num, 'time': time})
+
+
 @student.route('/sentence', methods=['POST'])
-def sentence_get():
+def sentence():
     homework_id = request.json.get('homework_id')
-    user_id = request.json.get('user_id')
     homework = Homework.query.filter_by(homework_id=homework_id).first()
     homework_data = homework.to_json()
 
-    english_paragraph = Paragraph.query.filter_by(essay_id=homework_data['essay_id']).all()
     data = []
+    folder_path = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
 
-    for i in english_paragraph:
-        sentence = i.to_json()
-        select_id = ParagraphDegree.query.filter_by(essay_id=homework_data['essay_id'], grade=homework_data['grade'],
-                                                    sen_id=sentence['sen_id']).first()
-        id_list = select_id.to_json()
-        id_list = id_list['word_id'].split(',')
-        article_data = sentence['article']
+    file_path = os.path.join(folder_path, homework.essay_name + '.xlsx')
+    df = pd.read_excel(file_path)
 
+    excel_dict = df.to_dict(orient='records')
+    for item in excel_dict:
+        selected_id = item['单词编号'].split(',')
+        article_data = item['句子内容']
         sentence_article = split_word(article_data)
-        sentence['article'] = []
         num = 0
 
+        article = []
         for k in sentence_article:
             if 'word_id' in k:
-                if k['word_id'] in id_list:
-                    sentence['article'].append({'id': k['word_id'], 'text': k['word'], 'type': 'select'})
+                if k['word_id'] in selected_id:
+                    article.append({'id': k['word_id'], 'text': k['word'], 'type': 'select'})
                     num += 1
                 else:
-                    sentence['article'].append({'id': k['word_id'], 'text': k['word'], 'type': 'normal'})
+                    article.append({'id': k['word_id'], 'text': k['word'], 'type': 'normal'})
             else:
-                sentence['article'].append({'text': k['word'], 'type': 'normal'})
-        sentence['select_num'] = num
-        data.append(sentence)
+                article.append({'text': k['word'], 'type': 'normal'})
 
-    audio_address = Essay.query.filter_by(essay_id=homework_data['essay_id']).first()
+        data.append(
+            {'id': item['句子编号'], 'essay_id': homework.essay_id, 'sen_id': item['句子编号'], 'article': article,
+             'translate': None, 'audio_star': item['音频起始位置'], 'audio_end': item['音频结束位置'],
+             'select_num': num})
 
-    paragraphs = HomeworkSentence.query.filter_by(homework_id=homework_id, stu_id=user_id).all()
+    audio_address = Essay.query.filter_by(essay_id=homework.essay_id).first()
 
-    if len(paragraphs) == 0:
-        start_id = 0
-        correct_num = 0
-        all_num = 0
-        time = 0
-    else:
-        start = paragraphs[-1].to_json()
-        start_id = int(start['sen_id'])
-        correct_num = 0
-        all_num = 0
-        time = 0
-        for i in paragraphs:
-            paragraph_data = i.to_json()
-            sentence = [item for item in data if item['sen_id'] == paragraph_data['sen_id']]
-            word_id = paragraph_data['word'].split(',')
-            word_num = paragraph_data['num'].split(',')
-            word_time = paragraph_data['time'].split(',')
+    return jsonify({'audio_address': audio_address.to_json()['audio_address'], 'data': data,
+                    'essay_name': homework.essay_name})
 
-            for k in sentence[0]['article']:
-                if k['type'] == 'select':
-                    if str(k['id']) in word_id:
-                        index = word_id.index(str(k['id']))
-                        if word_num[index] == '1':
-                            k['type'] = 'correct'
-                        else:
-                            k['type'] = 'error'
-            for j in word_num:
-                if j == '1':
-                    correct_num += 1
-                all_num += 1
-            for h in word_time:
-                time += int(h)
-    return jsonify(
-        {'audio_address': audio_address.to_json()['audio_address'], 'data': data, 'start_id': start_id,
-         'correct_num': correct_num, 'all_num': all_num, 'time': time})
+
+@student.route('/exercise_back', methods=['POST'])
+def exercise_back():
+    homework_id = request.json.get('homework_id')
+    stu_id = request.json.get('stu_id')
+    result = HomeworkSentence.query.filter_by(homework_id=homework_id, stu_id=stu_id).all()
+    for i in result:
+        db.session.delete(i)
+    db.session.commit()
+    return jsonify({'code': 200})
 
 
 @student.route('/apply_class', methods=['POST'])
