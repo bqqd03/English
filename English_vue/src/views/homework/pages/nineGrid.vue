@@ -362,9 +362,10 @@ function back() {
 .control {
   display: flex;
   justify-content: space-between;
-  position:fixed;
-  bottom: 100px;
-  left: 730px;
+  position: absolute;
+  left: 52%;
+  transform: translate(-49%);
+  bottom: 10%;
 }
 .translate_btn {
   width: 50px;

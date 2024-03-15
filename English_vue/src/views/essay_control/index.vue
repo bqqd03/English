@@ -94,7 +94,6 @@ function getCatalog() {
 function getTeacherCatalog() {
   https.post('/teacher/get_catalog',{'user_id':JSON.parse(localStorage.getItem('token')).user_id}).then(res=>{
     class_type.value = res.data
-    console.log(class_type.value)
   })
 }
 

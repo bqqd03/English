@@ -14,7 +14,7 @@
           :before-upload="beforeUpload"
           :limit="1"
           :show-file-list="false">
-        <el-button >文件上传</el-button>
+        <el-button type="primary" >文件上传</el-button>
       </el-upload>
     </el-form-item>
     <el-form-item  v-if="degree_length !== 0" label="内容修改">
@@ -57,9 +57,9 @@ function getDegree() {
     https.post('/teacher/get_degree',{'essay_id':props.essay_id}).then(res=>{
       degree.value = res.data
       degree_length.value = res.data.length
-      editName.value = res.data[0].value
-    }).catch(()=>{
-      ElMessage.error('未连接到服务器')
+      if (res.data.length!==0){
+        editName.value = res.data[0].value
+      }
     })
 }
 function back() {

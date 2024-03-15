@@ -18,7 +18,7 @@
   </div>
   <div class="translate" v-show="options.translate_btn">{{ translate }}</div>
 
-  <div class="select_grid" >
+  <div class="select_grid" style="margin-left: 50px" >
     <div style="margin-top: 5px;margin-left: 5px;" v-for="item in essay.nine_select" :key="item.id" >
       <el-button v-if="item.status==='error'" class="error_btn" @click="select_btn(item)">{{ item.text }}</el-button>
       <el-button v-else class="nine_btn" @click="select_btn(item)">{{ item.text }}</el-button>
@@ -26,7 +26,6 @@
   </div>
 
   <div class="control">
-    <div class="fun1" @click="re"/>
     <div class="essay_control">
       <div class="arrow_l" @click="sentence_prev"/>
       <div class="play" @click="play" :class="[options.isPlay ? 'pause_button' : 'play_button']"/>
@@ -84,6 +83,7 @@ const result_sentence=reactive({
     num:'',
     time:'',
     exercise_num:'',
+    essay_name:''
 })
 const result_essay=reactive({
     user_id: JSON.parse(localStorage.getItem('token')).user_id,
@@ -92,6 +92,7 @@ const result_essay=reactive({
     score: 0,
     time:'',
     exercise_num:'',
+    essay_name:''
 })
 
 onMounted(()=>{
@@ -102,14 +103,13 @@ onMounted(()=>{
         }
     ).then(res=>{
       essay.essay_data=res.data.data
+      result_essay.essay_name=res.data.essay_name
+      result_sentence.essay_name=res.data.essay_name
       audio_address.value = res.data.audio_address
       essay.essay_length=res.data.data.length
       result_essay.exercise_num = res.data.exercise_num
       result_sentence.exercise_num = res.data.exercise_num
-      essay.current_sentence = res.data.start_id
-      options.all_num = res.data.all_num
-      options.correct_num = res.data.correct_num
-      options.clock = res.data.time
+
       if (res.data.time!==0){
         options.select_time=res.data.time
       }
@@ -309,10 +309,18 @@ function sentence_prev() {
 }
 
 function back() {
-  clearTimeout(timer)
-  clearInterval(clock)
-  audioPlayer.value.pause()
-  router.push('/exercise')
+  https.post('/english/exercise_back',
+      {'essay_id':route.query.essay_id,
+        'exercise_num':result_essay.exercise_num,
+        'essay_name':result_essay.essay_name,
+        'user_id':JSON.parse(localStorage.getItem('token')).user_id
+      }
+  ).then(()=>{
+    clearTimeout(timer)
+    clearInterval(clock)
+    audioPlayer.value.pause()
+    router.push('/exercise')
+  })
 }
 </script>
 
@@ -371,7 +379,7 @@ function back() {
   display: flex;
   justify-content: space-between;
   position: absolute;
-  left: 49%;
+  left: 52%;
   transform: translate(-49%);
   bottom: 10%;
 }

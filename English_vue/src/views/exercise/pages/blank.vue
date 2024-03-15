@@ -78,6 +78,7 @@ const result_sentence=reactive({
   num:'',
   time:'',
   exercise_num:'',
+  essay_name:''
 })
 const result_essay=reactive({
   user_id: JSON.parse(localStorage.getItem('token')).user_id,
@@ -86,6 +87,7 @@ const result_essay=reactive({
   score: 0,
   time:'',
   exercise_num:'',
+  essay_name:''
 })
 
 onMounted(()=>{
@@ -96,14 +98,13 @@ onMounted(()=>{
       }
   ).then(res=>{
     essay.essay_data=res.data.data
+    result_essay.essay_name=res.data.essay_name
+    result_sentence.essay_name=res.data.essay_name
     audio_address.value =res.data.audio_address
     essay.essay_length=res.data.data.length
     result_essay.exercise_num = res.data.exercise_num
     result_sentence.exercise_num = res.data.exercise_num
-    essay.current_sentence = res.data.start_id
-    options.all_num = res.data.all_num
-    options.correct_num = res.data.correct_num
-    options.clock = res.data.time
+
     if (res.data.time!==0){
       options.select_time=res.data.time
     }
@@ -230,10 +231,18 @@ function sentence_prev() {
 }
 
 function back() {
-  clearTimeout(timer)
-  clearInterval(clock)
-  audioPlayer.value.pause()
-  router.push('/exercise')
+  https.post('/english/exercise_back',
+      {'essay_id':route.query.essay_id,
+        'exercise_num':result_essay.exercise_num,
+        'essay_name':result_essay.essay_name,
+        'user_id':JSON.parse(localStorage.getItem('token')).user_id
+      }
+  ).then(()=>{
+    clearTimeout(timer)
+    clearInterval(clock)
+    audioPlayer.value.pause()
+    router.push('/exercise')
+  })
 }
 
 function blank_check(item) {
@@ -307,15 +316,7 @@ function blank_check(item) {
   flex-wrap: wrap;
 }
 
-.nine_btn {
-  width: 150px;
-  height: 60px;
-  background-color: #7caadc;
-  color: #000;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 20px;
-}
+
 .error_btn {
   width: 150px;
   height: 60px;
@@ -328,9 +329,10 @@ function blank_check(item) {
 .control {
   display: flex;
   justify-content: space-between;
-  position:fixed;
-  bottom: 100px;
-  left: 730px;
+  position: absolute;
+  left: 52%;
+  transform: translate(-49%);
+  bottom: 10%;
 }
 .translate_btn {
   width: 50px;

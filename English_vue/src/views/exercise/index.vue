@@ -26,7 +26,7 @@
                       <span>{{essay.label}}</span>
                       <div class="card_button" >
                         <span v-if="essay.type === 'empty'" style="float: right"> 未添加文章</span>
-                        <el-button v-else @click="startDegree(essay.id)" style="margin-bottom: 20px">开始测试</el-button>
+                        <el-button v-else @click="startDegree(essay.id)" style="margin-bottom: 20px" type="primary">开始测试</el-button>
                       </div>
                     </el-card>
                   </div>
@@ -40,7 +40,7 @@
   </el-card>
 
   <el-dialog v-model="options.dialogDegreeVisible" title="选择难度" width="300">
-    <el-button v-for="item in grade" @click="startText(item.value)">{{ item.label }}</el-button>
+    <el-button style="margin-left: 20px" v-for="item in grade" @click="startText(item.value)" type="primary">{{ item.label }}</el-button>
   </el-dialog>
 </template>
 

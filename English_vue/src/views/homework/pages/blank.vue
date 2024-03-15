@@ -300,30 +300,14 @@ function blank_check(item) {
   flex-wrap: wrap;
 }
 
-.nine_btn {
-  width: 150px;
-  height: 60px;
-  background-color: #7caadc;
-  color: #000;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 20px;
-}
-.error_btn {
-  width: 150px;
-  height: 60px;
-  background-color: crimson;
-  color: #fff;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 20px;
-}
+
 .control {
   display: flex;
   justify-content: space-between;
-  position:fixed;
-  bottom: 100px;
-  left: 730px;
+  position: absolute;
+  left: 52%;
+  transform: translate(-49%);
+  bottom: 10%;
 }
 .translate_btn {
   width: 50px;
