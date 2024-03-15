@@ -34,9 +34,9 @@
               <el-form-item label="文章难度">
                 <span class="form_item">{{ selectData.grade }}</span>
               </el-form-item>
-              <div v-for="item in select_list">
+              <div v-for="item in word_list">
                 <el-form-item :label="'第 '+item.sen_id+' 句'">
-                  <span class="form_item">{{ item.select_id.join(", ") }}</span>
+                  <span class="form_item">{{ item.word_id}}</span>
                 </el-form-item>
               </div>
               <el-form-item>
@@ -68,49 +68,34 @@ let word_list=ref()
 let select_list=ref()
 
 onMounted(()=>{
-    https.post('/teacher/select_list',{'essay_id':selectData.essay_id, 'grade':selectData.grade}).then(res=>{
+    https.post('/teacher/select_list',{'essay_id':selectData.essay_id}).then(res=>{
         word_list.value = res.data
-        const temp=[]
-        for (let i=0;i<word_list.value.length;i++){
-            const words = word_list.value[i].word_list
-            const select_id=[]
-            for (let i=0;i<words.length;i++){
-                if (words[i].type === 'selected'){
-                    select_id.push(words[i].id)
-                }
-            }
-            temp.push({
-                essay_id:word_list.value[i].essay_id,
-                sen_id: word_list.value[i].sen_id,
-                select_id: select_id,
-                grade:selectData.grade
-            })
-        }
-        select_list.value=temp
     })
 })
 
 function selectWord(sen_id,word_id) {
-    const sentence = word_list.value.filter(item => item.sen_id === sen_id)
-    const word = sentence[0].word_list.filter(item => item.id === word_id)
-    if (word[0].type==='normal'){
-        word[0].type='selected'
-    } else {
-        word[0].type='normal'
-    }
+  const sentence = word_list.value.filter(item => item.sen_id === sen_id)
+  const word = sentence[0].word_list.filter(item => item.id === word_id)
+  if (word[0].type==='normal'){
+      word[0].type='selected'
+  } else {
+      word[0].type='normal'
+  }
 
-    const sentence_list = select_list.value.filter(item => item.sen_id === sen_id)
-    const index = sentence_list[0].select_id.indexOf(word_id)
-    if (index > -1) {
-        sentence_list[0].select_id.splice(index, 1); // 删除元素
-    } else {
-        sentence_list[0].select_id.push(word_id); // 添加元素
-    }
-    sentence_list[0].select_id.sort((a, b) => a - b)
+
+  const wordID_list= sentence[0].word_id.split(",")
+  if (wordID_list.includes(word_id.toString())) {
+    const index = wordID_list.indexOf(word_id.toString())
+    wordID_list.splice(index, 1); // 删除元素
+  } else {
+    wordID_list.push(word_id); // 添加元素
+  }
+  wordID_list.sort((a, b) => a - b)
+  sentence[0].word_id = wordID_list.join(",")
 }
 
 function onSubmit() {
-    https.post('/teacher/selected_word',{'selected_list':select_list.value}).then(res=>{
+    https.post('/teacher/selected_word',{'essay_id':selectData.essay_id,'selected_list':word_list.value}).then(res=>{
         if (res.data.code===200){
             ElMessage.success('修改成功')
             router.push('essay_control')
