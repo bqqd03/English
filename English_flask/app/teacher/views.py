@@ -512,14 +512,9 @@ def get_degree():
     folder_path = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
     path = os.path.join(folder_path, essay_id)
     for item in os.listdir(path):
-        if essay_id in item:
+        if '模板' not in item:
             x = item.replace('.xlsx', '').split('_')
-            if '简单' in item:
-                data.append({'value': item.replace('.xlsx', ''), 'label': x[1] + x[2]})
-            elif '中等' in item:
-                data.append({'value': item.replace('.xlsx', ''), 'label': x[1] + x[2]})
-            elif '困难' in item:
-                data.append({'value': item.replace('.xlsx', ''), 'label': x[1] + x[2]})
+            data.append({'value': item.replace('.xlsx', ''), 'label': x[1] + x[2]})
     return jsonify(data)
 
 
@@ -844,7 +839,8 @@ def homework_selectWord():
 
     data = []
     folder_path = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
-    for item in os.listdir(folder_path):
+    file_path = os.path.join(folder_path, essay_id)
+    for item in os.listdir(file_path):
         if essay_id in item and grade in item:
             x = item.replace('.xlsx', '').split('_')
             data.append({'value': item.replace('.xlsx', ''), 'label': x[1] + x[2]})

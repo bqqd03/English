@@ -227,12 +227,11 @@ def word_result():
 def sentence():
     homework_id = request.json.get('homework_id')
     homework = Homework.query.filter_by(homework_id=homework_id).first()
-    homework_data = homework.to_json()
 
     data = []
     folder_path = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
 
-    file_path = os.path.join(folder_path, homework.essay_name + '.xlsx')
+    file_path = os.path.join(folder_path, homework.essay_id, homework.essay_name + '.xlsx')
     df = pd.read_excel(file_path)
 
     excel_dict = df.to_dict(orient='records')
