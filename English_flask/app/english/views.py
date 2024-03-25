@@ -62,7 +62,6 @@ def essay_catalog():
 def essay_degree():
     essay_id = request.json.get('essay_id')
     data = []
-    a=[]
     folder_path = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
     path = os.path.join(folder_path, essay_id)
     for item in os.listdir(path):
