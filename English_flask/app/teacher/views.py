@@ -187,6 +187,23 @@ def add_all():
     sentences_path = os.path.join(folder + r'\sentences', whisper_file.filename)
     sentences_file.save(sentences_path)
 
+    path = os.path.join(folder + r'\essay_difficulty', essay_id)
+    if not os.path.exists(path):
+        os.makedirs(path)
+    difficulty_file = Workbook()
+    difficulty_worksheet = difficulty_file.active
+    difficulty_worksheet['A1'] = '句子编号'
+    difficulty_worksheet['B1'] = '句子内容'
+    difficulty_worksheet['C1'] = '音频起始位置'
+    difficulty_worksheet['D1'] = '音频结束位置'
+    difficulty_worksheet['E1'] = '单词编号'
+    index = 1
+    for i in audio_sentence:
+        difficulty_worksheet.append([index, i['text'], i['start'], i['end']])
+        index += 1
+    difficulty_path = os.path.join(path, '模板.xlsx')
+    difficulty_file.save(difficulty_path)
+
     sen_id = 1
     for i in audio_sentence:
         # translation = Translator(from_lang="en", to_lang="zh").translate(sentences[i])
@@ -257,6 +274,21 @@ def add_essay():
 
     text = docx2txt.process(essay_file)
     sentences = split_sentences(text, int(word_num))
+
+    path = os.path.join(folder + r'\essay_difficulty', essay_id)
+    if not os.path.exists(path):
+        os.makedirs(path)
+    difficulty_file = Workbook()
+    difficulty_worksheet = difficulty_file.active
+    difficulty_worksheet['A1'] = '句子编号'
+    difficulty_worksheet['B1'] = '句子内容'
+    difficulty_worksheet['C1'] = '单词编号'
+    index = 1
+    for i in sentences:
+        difficulty_worksheet.append([index, i])
+        index += 1
+    difficulty_path = os.path.join(path, '模板.xlsx')
+    difficulty_file.save(difficulty_path)
 
     sen_id = 1
     for i in sentences:
@@ -406,6 +438,23 @@ def add_audio():
     sentences_path = os.path.join(folder + r'\sentences', whisper_file.filename)
     sentences_file.save(sentences_path)
 
+    path = os.path.join(folder + r'\essay_difficulty', essay_id)
+    if not os.path.exists(path):
+        os.makedirs(path)
+    difficulty_file = Workbook()
+    difficulty_worksheet = difficulty_file.active
+    difficulty_worksheet['A1'] = '句子编号'
+    difficulty_worksheet['B1'] = '句子内容'
+    difficulty_worksheet['C1'] = '音频起始位置'
+    difficulty_worksheet['D1'] = '音频结束位置'
+    difficulty_worksheet['E1'] = '单词编号'
+    index = 1
+    for i in audio_sentence:
+        difficulty_worksheet.append([index, i['text'], i['start'], i['end']])
+        index += 1
+    difficulty_path = os.path.join(path, '模板.xlsx')
+    difficulty_file.save(difficulty_path)
+
     for i in range(len(sentences_data)):
         # translation = Translator(from_lang="en", to_lang="zh").translate(sentences[i])
         # translated_text = translator.translate(sentences[i], dest='zh-cn').text
@@ -420,6 +469,16 @@ def add_audio():
     db.session.commit()
 
     return jsonify({'code': 200})
+
+
+@teacher.route('/get_template', methods=['POST'])
+def get_template():
+    essay_id = request.json.get('essay_id')
+    folder = "http://localhost:8080/assets/"
+    path = os.path.join(folder + r'/essay_difficulty', essay_id)
+    difficulty_path = os.path.join(path, '模板.xlsx')
+
+    return jsonify(difficulty_path)
 
 
 # @teacher.route('/get_degree', methods=['POST'])
@@ -451,7 +510,8 @@ def get_degree():
     essay_id = request.json.get('essay_id')
     data = []
     folder_path = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
-    for item in os.listdir(folder_path):
+    path = os.path.join(folder_path, essay_id)
+    for item in os.listdir(path):
         if essay_id in item:
             x = item.replace('.xlsx', '').split('_')
             if '简单' in item:
@@ -466,8 +526,9 @@ def get_degree():
 @teacher.route('/upload_essayDifficulty', methods=['POST'])
 def upload_essayDifficulty():
     file = request.files.get('file')
-    folder = os.path.abspath('..') + r'\English_vue\public\assets'
-    file_path = os.path.join(folder + r'\essay_difficulty', file.filename)
+    folder = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
+    essay_id = file.filename.split('_')
+    file_path = os.path.join(folder, essay_id[0], file.filename)
     file.save(file_path)
     return jsonify({'code': 200})
 
@@ -535,10 +596,11 @@ def upload_essayDifficulty():
 
 @teacher.route('/select_list', methods=['POST'])
 def select_list():
-    essay_id = request.json.get('essay_id')
+    essay_name = request.json.get('essay_id')
     data = []
-    folder = os.path.abspath('..') + r'\English_vue\public\assets'
-    file_path = os.path.join(folder + r'\essay_difficulty', essay_id + '.xlsx')
+    folder = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
+    essay_id = essay_name.split('_')
+    file_path = os.path.join(folder, essay_id[0],  essay_name + '.xlsx')
     df = pd.read_excel(file_path)
 
     excel_dict = df.to_dict(orient='records')

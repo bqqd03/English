@@ -42,19 +42,37 @@ def essay_catalog():
     return jsonify({'code': 200, 'data': categories})
 
 
+# @english.route('/essay_degree', methods=['POST'])
+# def essay_degree():
+#     essay_id = request.json.get('essay_id')
+#     data = []
+#     easy_paragraph = ParagraphDegree.query.filter_by(essay_id=essay_id, grade='简单').first()
+#     medium_paragraph = ParagraphDegree.query.filter_by(essay_id=essay_id, grade='中等').first()
+#     hard_paragraph = ParagraphDegree.query.filter_by(essay_id=essay_id, grade='困难').first()
+#     if easy_paragraph is not None:
+#         data.append({'label': '简单', 'value': '简单'})
+#     if medium_paragraph is not None:
+#         data.append({'label': '中等', 'value': '中等'})
+#     if hard_paragraph is not None:
+#         data.append({'label': '困难', 'value': '困难'})
+#     return (jsonify(data)
+
+
 @english.route('/essay_degree', methods=['POST'])
 def essay_degree():
     essay_id = request.json.get('essay_id')
     data = []
-    easy_paragraph = ParagraphDegree.query.filter_by(essay_id=essay_id, grade='简单').first()
-    medium_paragraph = ParagraphDegree.query.filter_by(essay_id=essay_id, grade='中等').first()
-    hard_paragraph = ParagraphDegree.query.filter_by(essay_id=essay_id, grade='困难').first()
-    if easy_paragraph is not None:
-        data.append({'label': '简单', 'value': '简单'})
-    if medium_paragraph is not None:
-        data.append({'label': '中等', 'value': '中等'})
-    if hard_paragraph is not None:
-        data.append({'label': '困难', 'value': '困难'})
+    a=[]
+    folder_path = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
+    path = os.path.join(folder_path, essay_id)
+    for item in os.listdir(path):
+        if '简单' in item:
+            data.append({'label': '简单', 'value': '简单'})
+        elif '中等' in item:
+            data.append({'label': '中等', 'value': '中等'})
+        elif '困难' in item:
+            data.append({'label': '困难', 'value': '困难'})
+    data = [dict(t) for t in {tuple(d.items()) for d in data}]
     return jsonify(data)
 
 
@@ -140,15 +158,16 @@ def sentence_get():
 
     data = []
     essay_name_list = []
-    folder_path = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
-    for item in os.listdir(folder_path):
+    folder = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
+    file_path = os.path.join(folder, essay_id)
+    for item in os.listdir(file_path):
         if essay_id in item and grade in item:
             essay_name_list.append(item)
     num_items = len(essay_name_list)
     random_index = random.randrange(num_items)
     essay_name = essay_name_list[random_index]
 
-    file_path = os.path.join(folder_path, essay_name)
+    file_path = os.path.join(file_path, essay_name)
     df = pd.read_excel(file_path)
 
     excel_dict = df.to_dict(orient='records')
@@ -170,7 +189,7 @@ def sentence_get():
                 article.append({'text': k['word'], 'type': 'normal'})
 
         data.append({'id': item['句子编号'], 'essay_id': essay_id, 'sen_id': item['句子编号'], 'article': article,
-                     'translate': None, 'audio_star': item['音频起始位置'], 'audio_end': item['音频结束位置'],
+                     'translate': None, 'audio_start': item['音频起始位置'], 'audio_end': item['音频结束位置'],
                      'select_num': num})
 
     audio_address = Essay.query.filter_by(essay_id=essay_id).first()
