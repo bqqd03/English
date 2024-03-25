@@ -63,7 +63,6 @@ onMounted(()=>{
 function getExercise() {
   https.post('/teacher/class_homework',{'class_id':route.query.class_id}).then(res=>{
     homeworkClass.value=res.data
-    console.log(res.data)
   }).catch(()=>{
     ElMessage.error('未连接到服务器')
   })

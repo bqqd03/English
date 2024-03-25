@@ -59,13 +59,13 @@ const route = useRoute()
 const router = useRouter()
 const selectData = reactive({
     essay_id: route.query.essay_id,
-    grade: route.query.grade
+    grade:  route.query.essay_id.split('_')[1]
 })
 
 const scrollHeight = (document.documentElement.clientHeight - 200).toString() + "px"
 
 let word_list=ref()
-let select_list=ref()
+
 
 onMounted(()=>{
     https.post('/teacher/select_list',{'essay_id':selectData.essay_id}).then(res=>{

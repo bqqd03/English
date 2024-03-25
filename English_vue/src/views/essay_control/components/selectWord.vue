@@ -5,18 +5,24 @@
   </div>
 
   <el-form  style="margin-top: 20px;margin-left: 10px;">
-    <el-form-item label="文件上传">
-      <el-upload
-          ref="upload"
-          action="http://127.0.0.1:5000/teacher/upload_essayDifficulty"
-          accept=".xls, .xlsx"
-          :on-success="onSuccess"
-          :before-upload="beforeUpload"
-          :limit="1"
-          :show-file-list="false">
-        <el-button type="primary" >文件上传</el-button>
-      </el-upload>
-    </el-form-item>
+    <div style="display: flex;flex-flow: row">
+      <el-form-item label="模板下载">
+        <el-button style="margin-right: 20px" type="primary" @click="template()">下载</el-button>
+      </el-form-item>
+      <el-form-item label="文件上传">
+        <el-upload
+            ref="upload"
+            action="http://127.0.0.1:5000/teacher/upload_essayDifficulty"
+            accept=".xls, .xlsx"
+            :on-success="onSuccess"
+            :before-upload="beforeUpload"
+            :limit="1"
+            :show-file-list="false">
+          <el-button type="primary" >上传</el-button>
+        </el-upload>
+      </el-form-item>
+    </div>
+
     <el-form-item  v-if="degree_length !== 0" label="内容修改">
       <el-select v-model="editName"  placeholder="选择要修改的内容" style="width: 120px;margin-right: 15px">
         <el-option
@@ -100,6 +106,12 @@ function onSuccess(response) {
     ElMessage.success('上传成功')
     upload.value.clearFiles()
   }
+}
+
+function template() {
+  https.post('/teacher/get_template',{'essay_id':props.essay_id}).then(res=>{
+    window.open(res.data)
+  })
 }
 </script>
 
