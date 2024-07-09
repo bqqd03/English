@@ -218,9 +218,30 @@ def add_all():
         db.session.commit()
         sen_id += 1
 
+    baseWorkbook = load_workbook(difficulty_path)
+    baseSheet = baseWorkbook['Sheet']
+    baseSheet_list = []
+    for row in baseSheet.iter_rows():
+        row_list = []
+        for cell in row:
+            row_list.append(cell.value)
+        baseSheet_list.append(row_list)
+
     select_easy = select(7, sentences)
     easy_id = 1
+
+    easy_file = Workbook()
+    easy_worksheet = easy_file.active
+    easy_worksheet['A1'] = '句子编号'
+    easy_worksheet['B1'] = '句子内容'
+    easy_worksheet['C1'] = '音频起始位置'
+    easy_worksheet['D1'] = '音频结束位置'
+    easy_worksheet['E1'] = '单词编号'
+
     for i in select_easy:
+        easySheet = baseSheet_list[easy_id]
+        easySheet[-1] = i
+        easy_worksheet.append(easySheet)
         easy = ParagraphDegree(essay_id=essay_id,
                                sen_id=easy_id,
                                word_id=i,
@@ -229,9 +250,24 @@ def add_all():
         db.session.commit()
         easy_id += 1
 
+    easy_path = os.path.join(path, essay_id + '_简单_01.xlsx')
+    easy_file.save(easy_path)
+
     select_med = select(5, sentences)
     med_id = 1
+
+    med_file = Workbook()
+    med_worksheet = med_file.active
+    med_worksheet['A1'] = '句子编号'
+    med_worksheet['B1'] = '句子内容'
+    med_worksheet['C1'] = '音频起始位置'
+    med_worksheet['D1'] = '音频结束位置'
+    med_worksheet['E1'] = '单词编号'
+
     for i in select_med:
+        medSheet = baseSheet_list[med_id]
+        medSheet[-1] = i
+        med_worksheet.append(medSheet)
         med = ParagraphDegree(essay_id=essay_id,
                               sen_id=med_id,
                               word_id=i,
@@ -240,9 +276,24 @@ def add_all():
         db.session.commit()
         med_id += 1
 
+    med_path = os.path.join(path, essay_id + '_中等_01.xlsx')
+    med_file.save(med_path)
+
     select_hard = select(3, sentences)
     hard_id = 1
+
+    hard_file = Workbook()
+    hard_worksheet = hard_file.active
+    hard_worksheet['A1'] = '句子编号'
+    hard_worksheet['B1'] = '句子内容'
+    hard_worksheet['C1'] = '音频起始位置'
+    hard_worksheet['D1'] = '音频结束位置'
+    hard_worksheet['E1'] = '单词编号'
+
     for i in select_hard:
+        hardSheet = baseSheet_list[hard_id]
+        hardSheet[-1] = i
+        hard_worksheet.append(hardSheet)
         hard = ParagraphDegree(essay_id=essay_id,
                                sen_id=hard_id,
                                word_id=i,
@@ -250,6 +301,9 @@ def add_all():
         db.session.add(hard)
         db.session.commit()
         hard_id += 1
+
+    hard_path = os.path.join(path, essay_id + '_困难_01.xlsx')
+    hard_file.save(hard_path)
 
     essay_info = Essay.query.filter_by(essay_id=essay_id).first()
     essay_info.audio_address = '/assets/audio/' + audio_file.filename
@@ -595,7 +649,7 @@ def select_list():
     data = []
     folder = os.path.abspath('..') + r'\English_vue\public\assets\essay_difficulty'
     essay_id = essay_name.split('_')
-    file_path = os.path.join(folder, essay_id[0],  essay_name + '.xlsx')
+    file_path = os.path.join(folder, essay_id[0], essay_name + '.xlsx')
     df = pd.read_excel(file_path)
 
     excel_dict = df.to_dict(orient='records')
