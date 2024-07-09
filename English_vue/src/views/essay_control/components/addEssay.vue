@@ -37,7 +37,7 @@
       <el-form-item label="文章上传"  v-if="options.file_button">
         <input type="file" multiple  @change="onEssayChange" />
       </el-form-item>
-    <el-form-item label="每句词数"  v-if="options.file_button">
+    <el-form-item label="每句词数"  v-if="options.file_button && options.type==='empty'">
       <el-input-number v-model="addForm.word_num" :min="40"/>
     </el-form-item>
 
