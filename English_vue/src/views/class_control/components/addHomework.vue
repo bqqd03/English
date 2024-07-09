@@ -23,7 +23,7 @@
     </el-form-item>
     <el-form-item label="文章难度">
       <el-space size="large">
-        <el-select v-model="addForm.grade" placeholder="请选择练习文章难度" @change="selectWord()">
+        <el-select v-model="addForm.grade" placeholder="请选择练习文章难度" >
           <el-option
               v-for="item in gradeList"
               :label="item.label"
@@ -33,7 +33,7 @@
     </el-form-item>
     <el-form-item label="选词版本">
       <el-space size="large">
-        <el-select v-model="addForm.essay_name" placeholder="请选择练习选词版本">
+        <el-select v-model="addForm.essay_name" placeholder="请选择练习选词版本" @visible-change="selectWord()">
           <el-option
               v-for="item in essayNameList"
               :label="item.label"
