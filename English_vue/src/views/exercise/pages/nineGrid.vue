@@ -115,8 +115,8 @@ onMounted(()=>{
       clock = setInterval(() => {
           options.clock++
       }, 1000)
-    }).catch(()=>{
-      ElMessage.error('未连接到服务器')
+    }).catch(e=>{
+      ElMessage.error(e)
     })
 })
 
